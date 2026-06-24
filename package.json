@@ -1,0 +1,6 @@
+{
+    "name": "agulhao-charts",
+    "workspaces": [
+        "packages/*"
+    ]
+}

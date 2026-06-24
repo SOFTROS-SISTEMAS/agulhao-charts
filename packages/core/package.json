@@ -1,0 +1,38 @@
+{
+    "name": "@softros-sistemas/agulhao-charts-core",
+    "version": "1.0.0",
+    "homepage": "https://github.com/SOFTROS-SISTEMAS/agulhao-charts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "prepublishOnly": "npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SOFTROS-SISTEMAS/agulhao-charts.git",
+        "directory": "packages/core"
+    },
+    "peerDependencies": {
+        "echarts": ">=5"
+    },
+    "devDependencies": {
+        "echarts": "^5.6.0",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
+    }
+}
