@@ -1,51 +1,51 @@
 name: Publish packages
 
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+    workflow_dispatch:
+    push:
+        tags:
+            - 'v*'
 
 permissions:
-  contents: read
-  packages: write
+    contents: read
+    packages: write
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+    publish:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-          scope: '@softros-sistemas'
-          cache: npm
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: https://registry.npmjs.org
+                  scope: '@softros-sistemas'
+                  cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
 
-      - name: Test
-        run: npm test
+            - name: Test
+              run: npm test
 
-      - name: Publish core
-        run: npm publish -w packages/core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Publish core
+              run: npm publish -w packages/core --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish node
-        run: npm publish -w packages/node
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Publish node
+              run: npm publish -w packages/node --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish react
-        run: npm publish -w packages/react
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Publish react
+              run: npm publish -w packages/react --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
