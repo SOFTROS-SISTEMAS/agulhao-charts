@@ -1,5 +1,5 @@
 {
-    "name": "@softros-sistemas/agulhao-charts-core",
+    "name": "@softros/agulhao-charts-core",
     "version": "1.0.0",
     "description": "Tipos e tradutor para gerar opcoes ECharts a partir da definicao comum do Agulhao Charts.",
     "homepage": "https://github.com/SOFTROS-SISTEMAS/agulhao-charts",
@@ -14,7 +14,7 @@
         }
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "access": "public"
     },
     "files": [
         "dist"

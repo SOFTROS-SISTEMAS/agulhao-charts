@@ -1,4 +1,4 @@
-# @softros-sistemas/agulhao-charts-react
+# @softros/agulhao-charts-react
 
 Componente React do Agulhão Charts.
 
@@ -7,14 +7,14 @@ Ele recebe uma `DefinicaoGrafico`, usa o `core` para gerar a option do ECharts e
 ## Instalação
 
 ```bash
-npm install @softros-sistemas/agulhao-charts-react
+npm install @softros/agulhao-charts-react
 ```
 
 ## Uso
 
 ```tsx
-import { AgulhaoChart } from '@softros-sistemas/agulhao-charts-react'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import { AgulhaoChart } from '@softros/agulhao-charts-react'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 const grafico: DefinicaoGrafico = {
     tipo: 'linha',

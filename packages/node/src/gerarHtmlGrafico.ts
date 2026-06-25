@@ -1,5 +1,5 @@
-import { criarOpcaoECharts } from '@softros-sistemas/agulhao-charts-core'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type { OpcoesHtmlGrafico } from './types.js'
 
 const ECHARTS_URL_PADRAO = 'https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js'

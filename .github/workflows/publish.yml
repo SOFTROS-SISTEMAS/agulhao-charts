@@ -23,7 +23,7 @@ jobs:
               with:
                   node-version: 22
                   registry-url: https://registry.npmjs.org
-                  scope: '@softros-sistemas'
+                  scope: '@softros'
                   cache: npm
 
             - name: Install dependencies

@@ -1,8 +1,8 @@
 import * as ReactEChartsModule from 'echarts-for-react'
 import { useMemo } from 'react'
-import { criarOpcaoECharts } from '@softros-sistemas/agulhao-charts-core'
+import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
 import type { ComponentType, CSSProperties } from 'react'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 export type AgulhaoChartProps = {
     grafico: DefinicaoGrafico

@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
-import { criarOpcaoECharts } from '@softros-sistemas/agulhao-charts-core'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type * as ECharts from 'echarts/types/dist/echarts'
 import type { ImagemGraficoBase64, OpcoesImagemGrafico } from './types.js'
 

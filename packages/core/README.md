@@ -1,4 +1,4 @@
-# @softros-sistemas/agulhao-charts-core
+# @softros/agulhao-charts-core
 
 Pacote base do Agulhão Charts.
 
@@ -7,14 +7,14 @@ Ele contém os tipos da definição comum de gráfico e a função que traduz es
 ## Instalação
 
 ```bash
-npm install @softros-sistemas/agulhao-charts-core
+npm install @softros/agulhao-charts-core
 ```
 
 ## Uso
 
 ```ts
-import { criarOpcaoECharts } from '@softros-sistemas/agulhao-charts-core'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 const grafico: DefinicaoGrafico = {
     tipo: 'linha',

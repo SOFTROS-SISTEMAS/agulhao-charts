@@ -1,6 +1,6 @@
 import sharp from 'sharp'
 import { gerarImagemGraficoBase64 } from './gerarImagemGraficoBase64.js'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type { ImagemGraficoPngBase64, OpcoesImagemGrafico } from './types.js'
 
 /**

@@ -11,9 +11,9 @@ O projeto é um monorepo com pacotes separados por responsabilidade:
 ## Pacotes
 
 ```bash
-npm install @softros-sistemas/agulhao-charts-core
-npm install @softros-sistemas/agulhao-charts-node
-npm install @softros-sistemas/agulhao-charts-react
+npm install @softros/agulhao-charts-core
+npm install @softros/agulhao-charts-node
+npm install @softros/agulhao-charts-react
 ```
 
 ## Desenvolvimento

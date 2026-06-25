@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { gerarHtmlGrafico } from '../src/index.js'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 describe('gerarHtmlGrafico', () => {
     it('gera um html com a opcao ECharts traduzida pelo core', () => {

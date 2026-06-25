@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { gerarImagemGraficoBase64 } from '../src/index.js'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 describe('gerarImagemGraficoBase64', () => {
     it('gera uma imagem svg em base64 a partir de um grafico', () => {

@@ -1,4 +1,4 @@
-# @softros-sistemas/agulhao-charts-node
+# @softros/agulhao-charts-node
 
 Adaptador Node.js do Agulhão Charts.
 
@@ -7,14 +7,14 @@ Ele usa o pacote `core` para traduzir a definição comum e gera saídas prontas
 ## Instalação
 
 ```bash
-npm install @softros-sistemas/agulhao-charts-node
+npm install @softros/agulhao-charts-node
 ```
 
 ## Gerar HTML
 
 ```ts
-import { gerarHtmlGrafico } from '@softros-sistemas/agulhao-charts-node'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import { gerarHtmlGrafico } from '@softros/agulhao-charts-node'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 const grafico: DefinicaoGrafico = {
     tipo: 'barra',
@@ -41,7 +41,7 @@ const html = gerarHtmlGrafico(grafico, {
 ## Gerar SVG em base64
 
 ```ts
-import { gerarImagemGraficoBase64 } from '@softros-sistemas/agulhao-charts-node'
+import { gerarImagemGraficoBase64 } from '@softros/agulhao-charts-node'
 
 const imagem = gerarImagemGraficoBase64(grafico, {
     largura: 800,
@@ -62,7 +62,7 @@ res.type(imagem.mimeType).send(Buffer.from(imagem.base64, 'base64'))
 ## Gerar PNG em base64
 
 ```ts
-import { gerarImagemGraficoPngBase64 } from '@softros-sistemas/agulhao-charts-node'
+import { gerarImagemGraficoPngBase64 } from '@softros/agulhao-charts-node'
 
 const imagem = await gerarImagemGraficoPngBase64(grafico, {
     largura: 800,

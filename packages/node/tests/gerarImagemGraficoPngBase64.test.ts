@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { gerarImagemGraficoPngBase64 } from '../src/index.js'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 describe('gerarImagemGraficoPngBase64', () => {
     it('gera uma imagem png em base64 a partir de um grafico', async () => {

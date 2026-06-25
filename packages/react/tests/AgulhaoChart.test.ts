@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { AgulhaoChart } from '../src/index.js'
-import type { DefinicaoGrafico } from '@softros-sistemas/agulhao-charts-core'
+import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 describe('AgulhaoChart', () => {
     it('exporta um componente React que recebe uma definicao de grafico', () => {
