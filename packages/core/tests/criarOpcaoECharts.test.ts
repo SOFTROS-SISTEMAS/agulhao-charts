@@ -497,4 +497,105 @@ describe('criarOpcaoECharts', () => {
             ],
         })
     })
+
+    it('cria uma opcao de grafico de mapa', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'mapa',
+            titulo: 'Populacao por estado',
+            dataset: {
+                linhas: [
+                    {
+                        estado: 'São Paulo',
+                        populacao: 46649132,
+                    },
+                    {
+                        estado: 'Minas Gerais',
+                        populacao: 21411923,
+                    },
+                    {
+                        estado: 'Rio de Janeiro',
+                        populacao: 17463349,
+                    },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'estado',
+                valor: 'populacao',
+            },
+            opcoes: {
+                serie: {
+                    nome: 'População estimada',
+                },
+                mapa: {
+                    nome: 'BR',
+                    permitirZoom: true,
+                    mostrarRotuloAoDestacar: true,
+                    tamanho: '82%',
+                    centro: {
+                        x: '43%',
+                        y: '55%',
+                    },
+                    escalaVisual: {
+                        minimo: 0,
+                        maximo: 50000000,
+                        cores: ['#e0f3f8', '#74add1', '#4575b4', '#313695'],
+                        textoSuperior: 'Maior',
+                        textoInferior: 'Menor',
+                        calculavel: true,
+                        esquerda: 'right',
+                    },
+                },
+            },
+        }
+
+        const opcao = criarOpcaoECharts(grafico)
+
+        expect(opcao).toMatchObject({
+            title: {
+                text: 'Populacao por estado',
+            },
+            tooltip: {
+                trigger: 'item',
+            },
+            visualMap: {
+                left: 'right',
+                min: 0,
+                max: 50000000,
+                inRange: {
+                    color: ['#e0f3f8', '#74add1', '#4575b4', '#313695'],
+                },
+                text: ['Maior', 'Menor'],
+                calculable: true,
+            },
+            series: [
+                {
+                    name: 'População estimada',
+                    type: 'map',
+                    map: 'BR',
+                    roam: true,
+                    layoutSize: '82%',
+                    layoutCenter: ['43%', '55%'],
+                    emphasis: {
+                        label: {
+                            show: true,
+                        },
+                    },
+                    data: [
+                        {
+                            name: 'São Paulo',
+                            value: 46649132,
+                        },
+                        {
+                            name: 'Minas Gerais',
+                            value: 21411923,
+                        },
+                        {
+                            name: 'Rio de Janeiro',
+                            value: 17463349,
+                        },
+                    ],
+                },
+            ],
+        })
+    })
 })

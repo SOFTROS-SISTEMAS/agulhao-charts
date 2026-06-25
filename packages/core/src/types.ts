@@ -1,4 +1,4 @@
-export type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge'
+export type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa'
 export type TipoColunaGrafico = 'texto' | 'numero' | 'data' | 'dataHora' | 'booleano'
 export type ValorGrafico = string | number | boolean | Date | null
 export type LinhaGrafico = Record<string, ValorGrafico>
@@ -53,6 +53,25 @@ export type OpcoesGrafico = {
         minimo?: number
         maximo?: number
         mostrarProgresso?: boolean
+    }
+    mapa?: {
+        nome?: string
+        permitirZoom?: boolean
+        mostrarRotuloAoDestacar?: boolean
+        tamanho?: string
+        centro?: {
+            x?: string
+            y?: string
+        }
+        escalaVisual?: {
+            minimo?: number
+            maximo?: number
+            cores?: string[]
+            textoSuperior?: string
+            textoInferior?: string
+            calculavel?: boolean
+            esquerda?: string
+        }
     }
 }
 

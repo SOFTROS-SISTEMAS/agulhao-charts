@@ -16,6 +16,10 @@ export function criarOpcaoECharts(grafico: DefinicaoGrafico): EChartsOption {
         return criarOpcaoGauge(grafico)
     }
 
+    if (grafico.tipo === 'mapa') {
+        return criarOpcaoMapa(grafico)
+    }
+
     return criarOpcaoComEixos(grafico)
 }
 
@@ -130,12 +134,70 @@ function criarOpcaoGauge(grafico: DefinicaoGrafico): EChartsOption {
                       }
                     : undefined,
                 data: dataset.linhas.map((linha) => ({
-                    name: campoRotulo ? normalizarValor(linha[campoRotulo]) : opcoes?.serie?.nome ?? grafico.titulo,
+                    name: campoRotulo ? normalizarValor(linha[campoRotulo]) : (opcoes?.serie?.nome ?? grafico.titulo),
                     value: converterParaNumero(linha[campoValor as string]),
                 })),
             },
         ],
     })
+}
+
+/**
+ * Monta as opcoes especificas de grafico de mapa.
+ */
+function criarOpcaoMapa(grafico: DefinicaoGrafico): EChartsOption {
+    const { dataset, mapeamento, opcoes } = grafico
+    const campoRotulo = mapeamento.rotulo
+    const campoValor = mapeamento.valor
+    const campoCor = mapeamento.cor
+    const valores = dataset.linhas.map((linha) => converterParaNumero(linha[campoValor as string]))
+    const opcoesMapa = opcoes?.mapa
+    const escalaVisual = opcoes?.mapa?.escalaVisual
+
+    return aplicarOpcoesComuns(grafico, {
+        visualMap: {
+            left: escalaVisual?.esquerda ?? 'right',
+            min: escalaVisual?.minimo ?? obterMinimo(valores),
+            max: escalaVisual?.maximo ?? obterMaximo(valores),
+            inRange: {
+                color: escalaVisual?.cores ?? ['#e0f3f8', '#74add1', '#4575b4', '#313695'],
+            },
+            text: [escalaVisual?.textoSuperior ?? 'Maior', escalaVisual?.textoInferior ?? 'Menor'],
+            calculable: escalaVisual?.calculavel ?? true,
+        },
+        series: [
+            {
+                name: opcoes?.serie?.nome ?? grafico.titulo,
+                type: 'map',
+                map: opcoesMapa?.nome ?? 'BR',
+                roam: opcoesMapa?.permitirZoom ?? true,
+                layoutSize: opcoesMapa?.tamanho,
+                layoutCenter: opcoesMapa?.centro ? [opcoesMapa.centro.x ?? '50%', opcoesMapa.centro.y ?? '50%'] : undefined,
+                emphasis: {
+                    label: {
+                        show: opcoesMapa?.mostrarRotuloAoDestacar ?? true,
+                    },
+                },
+                data: dataset.linhas.map((linha) => ({
+                    name: normalizarValor(linha[campoRotulo as string]),
+                    value: converterParaNumero(linha[campoValor as string]),
+                    itemStyle: campoCor
+                        ? {
+                              color: normalizarValor(linha[campoCor]),
+                          }
+                        : undefined,
+                })),
+            },
+        ],
+    })
+}
+
+function obterMinimo(valores: number[]): number {
+    return valores.length > 0 ? Math.min(...valores) : 0
+}
+
+function obterMaximo(valores: number[]): number {
+    return valores.length > 0 ? Math.max(...valores) : 0
 }
 
 /**
@@ -155,14 +217,17 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
                   left: grafico.opcoes?.titulo?.esquerda,
               }
             : undefined,
-        tooltip: grafico.opcoes?.mostrarTooltip === false ? undefined : { trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? 'item' : 'axis' },
+        tooltip:
+            grafico.opcoes?.mostrarTooltip === false
+                ? undefined
+                : { trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? 'item' : 'axis' },
         legend:
             grafico.opcoes?.mostrarLegenda === false
                 ? undefined
                 : {
                       orient: grafico.opcoes?.legenda?.orientacao,
                       left: grafico.opcoes?.legenda?.esquerda,
-                      bottom: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? undefined : 0,
+                      bottom: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? undefined : 0,
                   },
         ...option,
     }
@@ -242,6 +307,21 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
         if (grafico.mapeamento.rotulo) {
             validarCampoExistente(grafico, grafico.mapeamento.rotulo)
         }
+
+        if (grafico.mapeamento.cor) {
+            validarCampoExistente(grafico, grafico.mapeamento.cor)
+        }
+
+        return
+    }
+
+    if (grafico.tipo === 'mapa') {
+        if (!grafico.mapeamento.rotulo || !grafico.mapeamento.valor) {
+            throw new Error('Graficos de mapa exigem mapeamento.rotulo e mapeamento.valor.')
+        }
+
+        validarCampoExistente(grafico, grafico.mapeamento.rotulo)
+        validarCampoExistente(grafico, grafico.mapeamento.valor)
 
         if (grafico.mapeamento.cor) {
             validarCampoExistente(grafico, grafico.mapeamento.cor)

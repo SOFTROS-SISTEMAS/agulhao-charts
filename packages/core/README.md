@@ -77,7 +77,7 @@ export type {
 ## Tipos
 
 ```ts
-type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge'
+type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa'
 type TipoColunaGrafico = 'texto' | 'numero' | 'data' | 'dataHora' | 'booleano'
 type ValorGrafico = string | number | boolean | Date | null
 type LinhaGrafico = Record<string, ValorGrafico>
@@ -142,6 +142,25 @@ type OpcoesGrafico = {
         minimo?: number
         maximo?: number
         mostrarProgresso?: boolean
+    }
+    mapa?: {
+        nome?: string
+        permitirZoom?: boolean
+        mostrarRotuloAoDestacar?: boolean
+        tamanho?: string
+        centro?: {
+            x?: string
+            y?: string
+        }
+        escalaVisual?: {
+            minimo?: number
+            maximo?: number
+            cores?: string[]
+            textoSuperior?: string
+            textoInferior?: string
+            calculavel?: boolean
+            esquerda?: string
+        }
     }
 }
 ```
@@ -310,6 +329,78 @@ const grafico: DefinicaoGrafico = {
 }
 ```
 
+### mapa
+
+Gráfico de mapa. O core monta a definição do gráfico, mas quem renderiza precisa registrar o GeoJSON no ECharts antes de usar a option.
+
+Mapeamentos obrigatórios:
+
+- `mapeamento.rotulo`
+- `mapeamento.valor`
+
+Exemplo para mapa do Brasil por estados:
+
+```ts
+const grafico: DefinicaoGrafico = {
+    tipo: 'mapa',
+    titulo: 'Indicador por estado',
+    dataset: {
+        linhas: [
+            { estado: 'Acre', valor: 894 },
+            { estado: 'Alagoas', valor: 3351 },
+            { estado: 'Amazonas', valor: 4207 },
+            { estado: 'Bahia', valor: 14931 },
+            { estado: 'Ceará', valor: 9187 },
+            { estado: 'Distrito Federal', valor: 3055 },
+            { estado: 'Minas Gerais', valor: 21412 },
+            { estado: 'Paraná', valor: 11516 },
+            { estado: 'Rio de Janeiro', valor: 17463 },
+            { estado: 'Rio Grande do Sul', valor: 11423 },
+            { estado: 'Santa Catarina', valor: 7252 },
+            { estado: 'São Paulo', valor: 46649 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'estado',
+        valor: 'valor',
+    },
+    opcoes: {
+        mostrarLegenda: false,
+        serie: {
+            nome: 'Indicador',
+        },
+        mapa: {
+            nome: 'BR',
+            permitirZoom: true,
+            mostrarRotuloAoDestacar: true,
+            tamanho: '82%',
+            centro: {
+                x: '43%',
+                y: '55%',
+            },
+            escalaVisual: {
+                minimo: 0,
+                maximo: 50000,
+                cores: ['#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695'],
+                textoSuperior: 'Maior',
+                textoInferior: 'Menor',
+                calculavel: true,
+                esquerda: 'right',
+            },
+        },
+    },
+}
+```
+
+Registro do mapa no navegador:
+
+```ts
+const resposta = await fetch('https://code.highcharts.com/mapdata/countries/br/br-all.geo.json')
+const geoJson = await resposta.json()
+
+echarts.registerMap('BR', geoJson)
+```
+
 ## Séries e agrupamento
 
 ### Uma série
@@ -447,6 +538,33 @@ const grafico: DefinicaoGrafico = {
         rotulo: 'origem',
         valor: 'acessos',
         cor: 'cor',
+    },
+}
+```
+
+### Cor de mapa
+
+Em gráficos de mapa, também é possível informar a cor diretamente por região usando uma coluna do dataset e `mapeamento.cor`.
+
+```ts
+const grafico: DefinicaoGrafico = {
+    tipo: 'mapa',
+    dataset: {
+        linhas: [
+            { estado: 'São Paulo', valor: 46649, cor: '#313695' },
+            { estado: 'Minas Gerais', valor: 21412, cor: '#4575b4' },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'estado',
+        valor: 'valor',
+        cor: 'cor',
+    },
+    opcoes: {
+        mapa: {
+            nome: 'BR',
+            tamanho: '82%',
+        },
     },
 }
 ```
@@ -594,6 +712,7 @@ O core valida:
 - `dataset.linhas` deve ser um array
 - `pizza` exige `mapeamento.rotulo` e `mapeamento.valor`
 - `gauge` exige `mapeamento.valor`
+- `mapa` exige `mapeamento.rotulo` e `mapeamento.valor`
 - gráficos com eixo exigem `mapeamento.eixoX` e `mapeamento.eixoY`
 - campos mapeados devem existir na primeira linha do dataset, quando houver linhas
 

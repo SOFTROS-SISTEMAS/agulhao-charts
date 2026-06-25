@@ -37,7 +37,7 @@ export function MinhaTela() {
 }
 ```
 
-O componente aceita qualquer `DefinicaoGrafico` suportada pelo pacote `core`, incluindo `barra`, `linha`, `area`, `pizza` e `gauge`.
+O componente aceita qualquer `DefinicaoGrafico` suportada pelo pacote `core`, incluindo `barra`, `linha`, `area`, `pizza`, `gauge` e `mapa`.
 
 Exemplo com cor por série:
 

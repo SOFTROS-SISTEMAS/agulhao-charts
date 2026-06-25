@@ -12,12 +12,6 @@ O projeto é um monorepo com pacotes separados por responsabilidade:
 
 - [Gráficos base](./exemplos/graficos-base.html): página HTML com exemplos dos principais tipos de gráfico.
 
-## Recursos
-
-- Tipos de gráfico: `barra`, `linha`, `area`, `pizza` e `gauge`.
-- Cores por série no formato de lista, adequado para estruturas fixas como GeneXus.
-- Cores por fatia em gráficos de pizza usando uma coluna do dataset.
-
 ## Pacotes
 
 ```bash
