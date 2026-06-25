@@ -1,6 +1,6 @@
 {
     "name": "@softros/agulhao-charts-node",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Funcoes Node.js para gerar saidas renderizaveis a partir da definicao comum do Agulhao Charts.",
     "homepage": "https://github.com/SOFTROS-SISTEMAS/agulhao-charts",
     "license": "Apache-2.0",
@@ -10,7 +10,9 @@
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "import": "./dist/index.js",
+            "require": "./dist/index.js",
+            "default": "./dist/index.js"
         }
     },
     "publishConfig": {
