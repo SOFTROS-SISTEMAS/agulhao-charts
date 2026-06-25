@@ -20,6 +20,12 @@ export type MapeamentoGrafico = {
     serie?: string
     rotulo?: string
     valor?: string
+    cor?: string
+}
+
+export type CorSerieGrafico = {
+    nome: string
+    cor: string
 }
 
 export type OpcoesGrafico = {
@@ -37,10 +43,16 @@ export type OpcoesGrafico = {
     }
     serie?: {
         nome?: string
+        cor?: CorSerieGrafico[]
     }
     pizza?: {
         raio?: string
         destacarAoPassarMouse?: boolean
+    }
+    gauge?: {
+        minimo?: number
+        maximo?: number
+        mostrarProgresso?: boolean
     }
 }
 

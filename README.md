@@ -8,6 +8,16 @@ O projeto é um monorepo com pacotes separados por responsabilidade:
 - [Node](./packages/node/README.md): geração de HTML, SVG em base64 e PNG em base64.
 - [React](./packages/react/README.md): componente `AgulhaoChart`.
 
+## Exemplos
+
+- [Gráficos base](./exemplos/graficos-base.html): página HTML com exemplos dos principais tipos de gráfico.
+
+## Recursos
+
+- Tipos de gráfico: `barra`, `linha`, `area`, `pizza` e `gauge`.
+- Cores por série no formato de lista, adequado para estruturas fixas como GeneXus.
+- Cores por fatia em gráficos de pizza usando uma coluna do dataset.
+
 ## Pacotes
 
 ```bash

@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exemplos base - Agulhão Charts</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --fundo: #f7f8fa;
+            --texto: #17202a;
+            --texto-fraco: #5d6875;
+            --borda: #d9dee7;
+            --painel: #ffffff;
+            --destaque: #0f766e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        header {
+            border-bottom: 1px solid var(--borda);
+            background: var(--painel);
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.2;
+            letter-spacing: 0;
+        }
+
+        .subtitulo {
+            margin: 8px 0 0;
+            color: var(--texto-fraco);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        main {
+            padding: 24px;
+        }
+
+        .grade {
+            display: grid;
+            gap: 18px;
+        }
+
+        .exemplo {
+            min-width: 0;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: var(--painel);
+            overflow: hidden;
+        }
+
+        .cabecalho-exemplo {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .cabecalho-exemplo h2 {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.3;
+            letter-spacing: 0;
+        }
+
+        .cabecalho-exemplo p {
+            margin: 5px 0 0;
+            color: var(--texto-fraco);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .tag {
+            flex: 0 0 auto;
+            border: 1px solid #b8ded8;
+            border-radius: 999px;
+            padding: 4px 8px;
+            color: var(--destaque);
+            font-size: 12px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .grafico {
+            padding: 8px 16px;
+            width: 100%;
+            height: 340px;
+        }
+
+        .json-grafico {
+            margin: 0 16px 16px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: #f9f9f9;
+            color: var(--texto-fraco);
+            overflow: hidden;
+        }
+
+        .json-grafico-titulo {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--borda);
+            background: #ffffff;
+            color: var(--texto);
+            font-size: 12px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .json-grafico pre {
+            max-height: 280px;
+            margin: 0;
+            padding: 12px;
+            overflow: auto;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="topo">
+            <h1>Agulhão Charts</h1>
+            <p class="subtitulo">Definições simples no formato público da biblioteca, renderizadas com ECharts no
+                navegador.</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="grade" aria-label="Exemplos de gráficos">
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Vendas por dia</h2>
+                        <p>Gráfico de linha com eixo X categórico e um campo numérico no eixo Y.</p>
+                    </div>
+                    <span class="tag">linha</span>
+                </div>
+                <div id="grafico-linha" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-linha"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Pedidos por dia</h2>
+                        <p>Gráfico de barras básico para comparação entre categorias.</p>
+                    </div>
+                    <span class="tag">barra</span>
+                </div>
+                <div id="grafico-barra" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-barra"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Receita acumulada</h2>
+                        <p>Gráfico de área usando a mesma estrutura de eixos dos gráficos de linha.</p>
+                    </div>
+                    <span class="tag">area</span>
+                </div>
+                <div id="grafico-area" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-area"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Origem dos acessos</h2>
+                        <p>Gráfico de pizza com mapeamento de rótulo e valor.</p>
+                    </div>
+                    <span class="tag">pizza</span>
+                </div>
+                <div id="grafico-pizza" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-pizza"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Receita e custo</h2>
+                        <p>Exemplo com múltiplos campos no eixo Y e rótulos vindos das colunas.</p>
+                    </div>
+                    <span class="tag">multiplas series</span>
+                </div>
+                <div id="grafico-multiplas-series" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-multiplas-series"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Pedidos por canal</h2>
+                        <p>Barras empilhadas agrupando linhas pelo campo de série.</p>
+                    </div>
+                    <span class="tag">empilhado</span>
+                </div>
+                <div id="grafico-empilhado" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-empilhado"></pre>
+                </div>
+            </article>
+
+            <article class="exemplo">
+                <div class="cabecalho-exemplo">
+                    <div>
+                        <h2>Meta atingida</h2>
+                        <p>Gráfico gauge com valor único, faixa mínima e máxima e progresso destacado.</p>
+                    </div>
+                    <span class="tag">gauge</span>
+                </div>
+                <div id="grafico-gauge" class="grafico"></div>
+                <div class="json-grafico">
+                    <div class="json-grafico-titulo">JSON do gráfico</div>
+                    <pre id="json-gauge"></pre>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
+    <script>
+        function criarOpcaoECharts(grafico) {
+            validarGrafico(grafico);
+
+            if (grafico.tipo === 'pizza') {
+                return criarOpcaoPizza(grafico);
+            }
+
+            if (grafico.tipo === 'gauge') {
+                return criarOpcaoGauge(grafico);
+            }
+
+            return criarOpcaoComEixos(grafico);
+        }
+
+        function criarOpcaoComEixos(grafico) {
+            const camposY = transformarEmListaDeCampos(grafico.mapeamento.eixoY);
+            const categorias = obterValoresUnicos(grafico.dataset.linhas, grafico.mapeamento.eixoX);
+            const gruposDeSerie = grafico.mapeamento.serie ? obterValoresUnicos(grafico.dataset.linhas, grafico.mapeamento.serie) : [];
+
+            return aplicarOpcoesComuns(grafico, {
+                grid: {
+                    top: grafico.titulo ? 70 : 36,
+                    right: 28,
+                    bottom: grafico.opcoes && grafico.opcoes.mostrarLegenda === false ? 42 : 72,
+                    left: 58,
+                },
+                xAxis: {
+                    type: 'category',
+                    data: categorias,
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: grafico.opcoes && grafico.opcoes.moeda ? '{value} ' + grafico.opcoes.moeda : '{value}',
+                    },
+                },
+                series: gruposDeSerie.length > 0 && camposY.length === 1
+                    ? gruposDeSerie.map((grupo) => criarSerieComEixos(grafico, camposY[0], categorias, grupo))
+                    : camposY.map((campo) => criarSerieComEixos(grafico, campo, categorias)),
+            });
+        }
+
+        function criarOpcaoPizza(grafico) {
+            const campoRotulo = grafico.mapeamento.rotulo;
+            const campoValor = grafico.mapeamento.valor;
+            const campoCor = grafico.mapeamento.cor;
+            const opcoesPizza = grafico.opcoes && grafico.opcoes.pizza ? grafico.opcoes.pizza : {};
+
+            return aplicarOpcoesComuns(grafico, {
+                series: [
+                    {
+                        name: grafico.opcoes && grafico.opcoes.serie ? grafico.opcoes.serie.nome : grafico.titulo,
+                        type: 'pie',
+                        radius: opcoesPizza.raio || '65%',
+                        data: grafico.dataset.linhas.map((linha) => ({
+                            name: normalizarValor(linha[campoRotulo]),
+                            value: converterParaNumero(linha[campoValor]),
+                            itemStyle: campoCor
+                                ? {
+                                    color: normalizarValor(linha[campoCor]),
+                                }
+                                : undefined,
+                        })),
+                        emphasis: opcoesPizza.destacarAoPassarMouse === false
+                            ? undefined
+                            : {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                                },
+                            },
+                    },
+                ],
+            });
+        }
+
+        function criarOpcaoGauge(grafico) {
+            const campoValor = grafico.mapeamento.valor;
+            const campoRotulo = grafico.mapeamento.rotulo;
+            const opcoes = grafico.opcoes || {};
+            const opcoesGauge = opcoes.gauge || {};
+            const nomeDaSerie = opcoes.serie && opcoes.serie.nome ? opcoes.serie.nome : grafico.titulo;
+            const corDaSerie = obterCorDaSerie(grafico, nomeDaSerie || campoValor, campoValor);
+
+            return aplicarOpcoesComuns(grafico, {
+                series: [
+                    {
+                        name: nomeDaSerie,
+                        type: 'gauge',
+                        min: opcoesGauge.minimo,
+                        max: opcoesGauge.maximo,
+                        progress: opcoesGauge.mostrarProgresso
+                            ? {
+                                show: true,
+                                itemStyle: corDaSerie
+                                    ? {
+                                        color: corDaSerie,
+                                    }
+                                    : undefined,
+                            }
+                            : undefined,
+                        itemStyle: corDaSerie
+                            ? {
+                                color: corDaSerie,
+                            }
+                            : undefined,
+                        data: grafico.dataset.linhas.map((linha) => ({
+                            name: campoRotulo ? normalizarValor(linha[campoRotulo]) : nomeDaSerie,
+                            value: converterParaNumero(linha[campoValor]),
+                        })),
+                    },
+                ],
+            });
+        }
+
+        function aplicarOpcoesComuns(grafico, option) {
+            const opcoes = grafico.opcoes || {};
+
+            return {
+                title: grafico.titulo
+                    ? {
+                        text: grafico.titulo,
+                        subtext: opcoes.subtitulo,
+                        left: opcoes.titulo && opcoes.titulo.esquerda,
+                    }
+                    : undefined,
+                tooltip: opcoes.mostrarTooltip === false ? undefined : { trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? 'item' : 'axis' },
+                legend: opcoes.mostrarLegenda === false
+                    ? undefined
+                    : {
+                        orient: opcoes.legenda && opcoes.legenda.orientacao,
+                        left: opcoes.legenda && opcoes.legenda.esquerda,
+                        top: grafico.tipo === 'pizza' ? 48 : undefined,
+                        bottom: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? undefined : 0,
+                    },
+                ...option,
+            };
+        }
+
+        function criarSerieComEixos(grafico, campoValor, categorias, grupoDaSerie) {
+            const opcoes = grafico.opcoes || {};
+            const nomeDaSerie = grupoDaSerie || obterRotuloDoCampo(grafico, campoValor);
+            const corDaSerie = obterCorDaSerie(grafico, nomeDaSerie, campoValor);
+
+            return {
+                name: nomeDaSerie,
+                type: traduzirTipoGrafico(grafico.tipo),
+                stack: opcoes.empilhado ? 'total' : undefined,
+                areaStyle: grafico.tipo === 'area' ? {} : undefined,
+                lineStyle: corDaSerie && grafico.tipo !== 'barra'
+                    ? {
+                        color: corDaSerie,
+                    }
+                    : undefined,
+                itemStyle: corDaSerie
+                    ? {
+                        color: corDaSerie,
+                    }
+                    : undefined,
+                data: categorias.map((categoria) =>
+                    somarValores(
+                        grafico.dataset.linhas
+                            .filter((linha) => normalizarValor(linha[grafico.mapeamento.eixoX]) === categoria)
+                            .filter((linha) => !grafico.mapeamento.serie || normalizarValor(linha[grafico.mapeamento.serie]) === grupoDaSerie)
+                            .map((linha) => linha[campoValor]),
+                    ),
+                ),
+            };
+        }
+
+        function validarGrafico(grafico) {
+            if (!grafico.dataset || !Array.isArray(grafico.dataset.linhas)) {
+                throw new Error('As linhas do dataset do grafico devem ser um array.');
+            }
+
+            if (grafico.tipo === 'pizza') {
+                if (!grafico.mapeamento.rotulo || !grafico.mapeamento.valor) {
+                    throw new Error('Graficos de pizza exigem mapeamento.rotulo e mapeamento.valor.');
+                }
+                return;
+            }
+
+            if (grafico.tipo === 'gauge') {
+                if (!grafico.mapeamento.valor) {
+                    throw new Error('Graficos gauge exigem mapeamento.valor.');
+                }
+                return;
+            }
+
+            if (!grafico.mapeamento.eixoX || !grafico.mapeamento.eixoY) {
+                throw new Error('Graficos com eixo exigem mapeamento.eixoX e mapeamento.eixoY.');
+            }
+        }
+
+        function transformarEmListaDeCampos(campo) {
+            if (!campo) {
+                return [];
+            }
+
+            return Array.isArray(campo) ? campo : [campo];
+        }
+
+        function obterValoresUnicos(linhas, campo) {
+            if (!campo) {
+                return [];
+            }
+
+            return Array.from(new Set(linhas.map((linha) => normalizarValor(linha[campo]))));
+        }
+
+        function somarValores(valores) {
+            return valores.reduce((total, valor) => total + converterParaNumero(valor), 0);
+        }
+
+        function converterParaNumero(valor) {
+            if (typeof valor === 'number') {
+                return valor;
+            }
+
+            if (typeof valor === 'string') {
+                const numero = Number(valor);
+                return Number.isFinite(numero) ? numero : 0;
+            }
+
+            return 0;
+        }
+
+        function normalizarValor(valor) {
+            if (valor instanceof Date) {
+                return valor.toISOString();
+            }
+
+            if (valor === null || valor === undefined) {
+                return '';
+            }
+
+            return String(valor);
+        }
+
+        function obterRotuloDoCampo(grafico, campo) {
+            const coluna = grafico.dataset.colunas && grafico.dataset.colunas.find((item) => item.nome === campo);
+            return coluna && coluna.rotulo ? coluna.rotulo : campo;
+        }
+
+        function obterCorDaSerie(grafico, nomeDaSerie, campoValor) {
+            const cor = grafico.opcoes && grafico.opcoes.serie ? grafico.opcoes.serie.cor : undefined;
+
+            if (!cor) {
+                return undefined;
+            }
+
+            const item = cor.find((item) => item.nome === nomeDaSerie || item.nome === campoValor);
+            return item ? item.cor : undefined;
+        }
+
+        function traduzirTipoGrafico(tipo) {
+            return tipo === 'barra' ? 'bar' : 'line';
+        }
+
+        const exemplos = [
+            {
+                elemento: 'grafico-linha',
+                definicao: {
+                    tipo: 'linha',
+                    titulo: 'Vendas por dia',
+                    dataset: {
+                        linhas: [
+                            { dia: 'Seg', valor: 150 },
+                            { dia: 'Ter', valor: 230 },
+                            { dia: 'Qua', valor: 224 },
+                            { dia: 'Qui', valor: 218 },
+                            { dia: 'Sex', valor: 135 },
+                            { dia: 'Sab', valor: 147 },
+                            { dia: 'Dom', valor: 260 },
+                        ],
+                    },
+                    mapeamento: {
+                        eixoX: 'dia',
+                        eixoY: 'valor',
+                    },
+                    opcoes: {
+                        serie: {
+                            nome: 'Vendas',
+                            cor: [
+                                {
+                                    nome: 'Vendas',
+                                    cor: '#0f766e',
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-barra',
+                definicao: {
+                    tipo: 'barra',
+                    titulo: 'Pedidos por dia',
+                    dataset: {
+                        linhas: [
+                            { dia: 'Seg', pedidos: 120 },
+                            { dia: 'Ter', pedidos: 200 },
+                            { dia: 'Qua', pedidos: 150 },
+                            { dia: 'Qui', pedidos: 80 },
+                            { dia: 'Sex', pedidos: 70 },
+                            { dia: 'Sab', pedidos: 110 },
+                            { dia: 'Dom', pedidos: 130 },
+                        ],
+                    },
+                    mapeamento: {
+                        eixoX: 'dia',
+                        eixoY: 'pedidos',
+                    },
+                    opcoes: {
+                        mostrarLegenda: false,
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-area',
+                definicao: {
+                    tipo: 'area',
+                    titulo: 'Receita acumulada',
+                    dataset: {
+                        linhas: [
+                            { mes: 'Jan', receita: 32000 },
+                            { mes: 'Fev', receita: 41000 },
+                            { mes: 'Mar', receita: 52000 },
+                            { mes: 'Abr', receita: 61000 },
+                            { mes: 'Mai', receita: 75000 },
+                            { mes: 'Jun', receita: 89000 },
+                        ],
+                    },
+                    mapeamento: {
+                        eixoX: 'mes',
+                        eixoY: 'receita',
+                    },
+                    opcoes: {
+                        moeda: 'BRL',
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-pizza',
+                definicao: {
+                    tipo: 'pizza',
+                    titulo: 'Origem dos acessos',
+                    dataset: {
+                        linhas: [
+                            { origem: 'Busca', acessos: 1048, cor: '#0f766e' },
+                            { origem: 'Direto', acessos: 735, cor: '#2563eb' },
+                            { origem: 'E-mail', acessos: 580, cor: '#d97706' },
+                            { origem: 'Parceiros', acessos: 484, cor: '#7c3aed' },
+                            { origem: 'Video', acessos: 300, cor: '#dc2626' },
+                        ],
+                    },
+                    mapeamento: {
+                        rotulo: 'origem',
+                        valor: 'acessos',
+                        cor: 'cor',
+                    },
+                    opcoes: {
+                        titulo: {
+                            esquerda: 'center',
+                        },
+                        legenda: {
+                            orientacao: 'vertical',
+                            esquerda: 'left',
+                        },
+                        serie: {
+                            nome: 'Acessos por origem',
+                        },
+                        pizza: {
+                            raio: '54%',
+                        },
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-multiplas-series',
+                definicao: {
+                    tipo: 'linha',
+                    titulo: 'Receita e custo',
+                    dataset: {
+                        colunas: [
+                            { nome: 'mes', tipo: 'texto', rotulo: 'Mês' },
+                            { nome: 'receita', tipo: 'numero', rotulo: 'Receita' },
+                            { nome: 'custo', tipo: 'numero', rotulo: 'Custo' },
+                        ],
+                        linhas: [
+                            { mes: 'Jan', receita: 42000, custo: 24000 },
+                            { mes: 'Fev', receita: 46000, custo: 27000 },
+                            { mes: 'Mar', receita: 53000, custo: 31000 },
+                            { mes: 'Abr', receita: 62000, custo: 35000 },
+                            { mes: 'Mai', receita: 69000, custo: 39000 },
+                        ],
+                    },
+                    mapeamento: {
+                        eixoX: 'mes',
+                        eixoY: ['receita', 'custo'],
+                    },
+                    opcoes: {
+                        moeda: 'BRL',
+                        serie: {
+                            cor: [
+                                {
+                                    nome: 'Receita',
+                                    cor: '#0f766e',
+                                },
+                                {
+                                    nome: 'Custo',
+                                    cor: '#dc2626',
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-empilhado',
+                definicao: {
+                    tipo: 'barra',
+                    titulo: 'Pedidos por canal',
+                    dataset: {
+                        linhas: [
+                            { mes: 'Jan', canal: 'Loja', pedidos: 120 },
+                            { mes: 'Jan', canal: 'Online', pedidos: 180 },
+                            { mes: 'Fev', canal: 'Loja', pedidos: 140 },
+                            { mes: 'Fev', canal: 'Online', pedidos: 210 },
+                            { mes: 'Mar', canal: 'Loja', pedidos: 160 },
+                            { mes: 'Mar', canal: 'Online', pedidos: 240 },
+                            { mes: 'Abr', canal: 'Loja', pedidos: 150 },
+                            { mes: 'Abr', canal: 'Online', pedidos: 260 },
+                        ],
+                    },
+                    mapeamento: {
+                        eixoX: 'mes',
+                        eixoY: 'pedidos',
+                        serie: 'canal',
+                    },
+                    opcoes: {
+                        empilhado: true,
+                    },
+                },
+            },
+            {
+                elemento: 'grafico-gauge',
+                definicao: {
+                    tipo: 'gauge',
+                    titulo: 'Meta atingida',
+                    dataset: {
+                        linhas: [
+                            { indicador: 'Conversao', percentual: 72 },
+                        ],
+                    },
+                    mapeamento: {
+                        rotulo: 'indicador',
+                        valor: 'percentual',
+                    },
+                    opcoes: {
+                        mostrarLegenda: false,
+                        serie: {
+                            nome: 'Performance',
+                            cor: [
+                                {
+                                    nome: 'Performance',
+                                    cor: '#0f766e',
+                                },
+                            ],
+                        },
+                        gauge: {
+                            minimo: 0,
+                            maximo: 100,
+                            mostrarProgresso: true,
+                        },
+                    },
+                },
+            },
+        ];
+
+        const graficos = exemplos.map((exemplo) => {
+            const grafico = echarts.init(document.getElementById(exemplo.elemento));
+            grafico.setOption(criarOpcaoECharts(exemplo.definicao));
+
+            const elementoJson = document.getElementById(exemplo.elemento.replace('grafico-', 'json-'));
+            elementoJson.textContent = JSON.stringify(exemplo.definicao, null, 4);
+
+            return grafico;
+        });
+
+        window.addEventListener('resize', () => {
+            graficos.forEach((grafico) => grafico.resize());
+        });
+    </script>
+</body>
+
+</html>

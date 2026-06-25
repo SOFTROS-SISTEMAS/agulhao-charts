@@ -37,6 +37,67 @@ export function MinhaTela() {
 }
 ```
 
+O componente aceita qualquer `DefinicaoGrafico` suportada pelo pacote `core`, incluindo `barra`, `linha`, `area`, `pizza` e `gauge`.
+
+Exemplo com cor por série:
+
+```tsx
+const graficoComCor: DefinicaoGrafico = {
+    tipo: 'linha',
+    titulo: 'Vendas por dia',
+    dataset: {
+        linhas: [
+            { dia: 'Seg', valor: 150 },
+            { dia: 'Ter', valor: 230 },
+        ],
+    },
+    mapeamento: {
+        eixoX: 'dia',
+        eixoY: 'valor',
+    },
+    opcoes: {
+        serie: {
+            nome: 'Vendas',
+            cor: [
+                { nome: 'Vendas', cor: '#0f766e' },
+            ],
+        },
+    },
+}
+```
+
+Exemplo de gauge:
+
+```tsx
+const graficoGauge: DefinicaoGrafico = {
+    tipo: 'gauge',
+    titulo: 'Meta atingida',
+    dataset: {
+        linhas: [
+            { indicador: 'Conversão', percentual: 72 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'indicador',
+        valor: 'percentual',
+    },
+    opcoes: {
+        mostrarLegenda: false,
+        serie: {
+            nome: 'Performance',
+            cor: [
+                { nome: 'Performance', cor: '#0f766e' },
+            ],
+        },
+        gauge: {
+            minimo: 0,
+            maximo: 100,
+            mostrarProgresso: true,
+        },
+    },
+}
+```
+
 ## Props
 
 ```ts

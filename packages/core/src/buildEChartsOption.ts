@@ -12,6 +12,10 @@ export function criarOpcaoECharts(grafico: DefinicaoGrafico): EChartsOption {
         return criarOpcaoPizza(grafico)
     }
 
+    if (grafico.tipo === 'gauge') {
+        return criarOpcaoGauge(grafico)
+    }
+
     return criarOpcaoComEixos(grafico)
 }
 
@@ -28,6 +32,9 @@ function criarOpcaoComEixos(grafico: DefinicaoGrafico): EChartsOption {
     const gruposDeSerie = mapeamento.serie ? obterValoresUnicos(dataset.linhas, mapeamento.serie) : []
 
     return aplicarOpcoesComuns(grafico, {
+        grid: {
+            bottom: grafico.opcoes?.mostrarLegenda === false ? undefined : 64,
+        },
         xAxis: {
             type: 'category',
             data: categorias,
@@ -56,6 +63,7 @@ function criarOpcaoPizza(grafico: DefinicaoGrafico): EChartsOption {
     const { dataset, mapeamento } = grafico
     const campoRotulo = mapeamento.rotulo
     const campoValor = mapeamento.valor
+    const campoCor = mapeamento.cor
 
     return aplicarOpcoesComuns(grafico, {
         series: [
@@ -66,6 +74,11 @@ function criarOpcaoPizza(grafico: DefinicaoGrafico): EChartsOption {
                 data: dataset.linhas.map((linha) => ({
                     name: normalizarValor(linha[campoRotulo as string]),
                     value: converterParaNumero(linha[campoValor as string]),
+                    itemStyle: campoCor
+                        ? {
+                              color: normalizarValor(linha[campoCor]),
+                          }
+                        : undefined,
                 })),
                 emphasis:
                     grafico.opcoes?.pizza?.destacarAoPassarMouse === false
@@ -77,6 +90,49 @@ function criarOpcaoPizza(grafico: DefinicaoGrafico): EChartsOption {
                                   shadowColor: 'rgba(0, 0, 0, 0.5)',
                               },
                           },
+            },
+        ],
+    })
+}
+
+/**
+ * Monta as opcoes especificas de grafico gauge.
+ *
+ * O gauge usa `mapeamento.valor` para o valor do marcador e pode usar
+ * `mapeamento.rotulo` para nomear cada leitura.
+ */
+function criarOpcaoGauge(grafico: DefinicaoGrafico): EChartsOption {
+    const { dataset, mapeamento, opcoes } = grafico
+    const campoValor = mapeamento.valor
+    const campoRotulo = mapeamento.rotulo
+    const corDaSerie = obterCorDaSerie(grafico, opcoes?.serie?.nome ?? grafico.titulo ?? campoValor ?? '', campoValor ?? '')
+
+    return aplicarOpcoesComuns(grafico, {
+        series: [
+            {
+                name: opcoes?.serie?.nome ?? grafico.titulo,
+                type: 'gauge',
+                min: opcoes?.gauge?.minimo,
+                max: opcoes?.gauge?.maximo,
+                progress: opcoes?.gauge?.mostrarProgresso
+                    ? {
+                          show: true,
+                          itemStyle: corDaSerie
+                              ? {
+                                    color: corDaSerie,
+                                }
+                              : undefined,
+                      }
+                    : undefined,
+                itemStyle: corDaSerie
+                    ? {
+                          color: corDaSerie,
+                      }
+                    : undefined,
+                data: dataset.linhas.map((linha) => ({
+                    name: campoRotulo ? normalizarValor(linha[campoRotulo]) : opcoes?.serie?.nome ?? grafico.titulo,
+                    value: converterParaNumero(linha[campoValor as string]),
+                })),
             },
         ],
     })
@@ -99,13 +155,14 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
                   left: grafico.opcoes?.titulo?.esquerda,
               }
             : undefined,
-        tooltip: grafico.opcoes?.mostrarTooltip === false ? undefined : { trigger: grafico.tipo === 'pizza' ? 'item' : 'axis' },
+        tooltip: grafico.opcoes?.mostrarTooltip === false ? undefined : { trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? 'item' : 'axis' },
         legend:
             grafico.opcoes?.mostrarLegenda === false
                 ? undefined
                 : {
                       orient: grafico.opcoes?.legenda?.orientacao,
                       left: grafico.opcoes?.legenda?.esquerda,
+                      bottom: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' ? undefined : 0,
                   },
         ...option,
     }
@@ -121,12 +178,25 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
  */
 function criarSerieComEixos(grafico: DefinicaoGrafico, campoValor: string, categorias: string[], grupoDaSerie?: string) {
     const { dataset, mapeamento, opcoes } = grafico
+    const nomeDaSerie = grupoDaSerie ?? obterRotuloDoCampo(grafico, campoValor)
+    const corDaSerie = obterCorDaSerie(grafico, nomeDaSerie, campoValor)
 
     return {
-        name: grupoDaSerie ?? obterRotuloDoCampo(grafico, campoValor),
+        name: nomeDaSerie,
         type: traduzirTipoGrafico(grafico.tipo),
         stack: opcoes?.empilhado ? 'total' : undefined,
         areaStyle: grafico.tipo === 'area' ? {} : undefined,
+        lineStyle:
+            corDaSerie && grafico.tipo !== 'barra'
+                ? {
+                      color: corDaSerie,
+                  }
+                : undefined,
+        itemStyle: corDaSerie
+            ? {
+                  color: corDaSerie,
+              }
+            : undefined,
         data: categorias.map((categoria) =>
             somarValores(
                 dataset.linhas
@@ -154,6 +224,29 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
 
         validarCampoExistente(grafico, grafico.mapeamento.rotulo)
         validarCampoExistente(grafico, grafico.mapeamento.valor)
+
+        if (grafico.mapeamento.cor) {
+            validarCampoExistente(grafico, grafico.mapeamento.cor)
+        }
+
+        return
+    }
+
+    if (grafico.tipo === 'gauge') {
+        if (!grafico.mapeamento.valor) {
+            throw new Error('Graficos gauge exigem mapeamento.valor.')
+        }
+
+        validarCampoExistente(grafico, grafico.mapeamento.valor)
+
+        if (grafico.mapeamento.rotulo) {
+            validarCampoExistente(grafico, grafico.mapeamento.rotulo)
+        }
+
+        if (grafico.mapeamento.cor) {
+            validarCampoExistente(grafico, grafico.mapeamento.cor)
+        }
+
         return
     }
 
@@ -165,6 +258,10 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
 
     if (grafico.mapeamento.serie) {
         validarCampoExistente(grafico, grafico.mapeamento.serie)
+    }
+
+    if (grafico.mapeamento.cor) {
+        validarCampoExistente(grafico, grafico.mapeamento.cor)
     }
 
     for (const campo of transformarEmListaDeCampos(grafico.mapeamento.eixoY)) {
@@ -269,6 +366,21 @@ function normalizarValor(valor: ValorGrafico): string {
  */
 function obterRotuloDoCampo(grafico: DefinicaoGrafico, campo: string): string {
     return grafico.dataset.colunas?.find((coluna) => coluna.nome === campo)?.rotulo ?? campo
+}
+
+/**
+ * Resolve a cor configurada para uma serie.
+ *
+ * A cor e encontrada pelo nome exibido na legenda ou pelo nome tecnico do campo.
+ */
+function obterCorDaSerie(grafico: DefinicaoGrafico, nomeDaSerie: string, campoValor: string): string | undefined {
+    const cor = grafico.opcoes?.serie?.cor
+
+    if (!cor) {
+        return undefined
+    }
+
+    return cor.find((item) => item.nome === nomeDaSerie || item.nome === campoValor)?.cor
 }
 
 /**

@@ -38,6 +38,66 @@ const html = gerarHtmlGrafico(grafico, {
 })
 ```
 
+As opções de gráfico são as mesmas do pacote `core`, incluindo `gauge`, cores por série e cores por fatia de pizza.
+
+Exemplo de cor por série:
+
+```ts
+const grafico: DefinicaoGrafico = {
+    tipo: 'linha',
+    dataset: {
+        linhas: [
+            { dia: 'Seg', valor: 150 },
+            { dia: 'Ter', valor: 230 },
+        ],
+    },
+    mapeamento: {
+        eixoX: 'dia',
+        eixoY: 'valor',
+    },
+    opcoes: {
+        serie: {
+            nome: 'Vendas',
+            cor: [
+                { nome: 'Vendas', cor: '#0f766e' },
+            ],
+        },
+    },
+}
+```
+
+Exemplo de gauge:
+
+```ts
+const graficoGauge: DefinicaoGrafico = {
+    tipo: 'gauge',
+    titulo: 'Meta atingida',
+    dataset: {
+        linhas: [
+            { indicador: 'Conversão', percentual: 72 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'indicador',
+        valor: 'percentual',
+    },
+    opcoes: {
+        mostrarLegenda: false,
+        serie: {
+            nome: 'Performance',
+            cor: [
+                { nome: 'Performance', cor: '#0f766e' },
+            ],
+        },
+        gauge: {
+            minimo: 0,
+            maximo: 100,
+            mostrarProgresso: true,
+        },
+    },
+}
+```
+
 ## Gerar SVG em base64
 
 ```ts
