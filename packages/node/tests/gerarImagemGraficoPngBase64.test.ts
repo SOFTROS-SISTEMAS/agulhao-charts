@@ -37,4 +37,43 @@ describe('gerarImagemGraficoPngBase64', () => {
         expect(imagem.buffer.equals(bufferDecodificado)).toBe(true)
         expect(bufferDecodificado.subarray(0, 8)).toEqual(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
     })
+
+    it('gera uma imagem png de mapa usando o mapa padrao do Brasil', async () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'mapa',
+            titulo: 'Indicador por estado',
+            dataset: {
+                linhas: [
+                    {
+                        estado: 'São Paulo',
+                        valor: 46649,
+                    },
+                    {
+                        estado: 'Minas Gerais',
+                        valor: 21412,
+                    },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'estado',
+                valor: 'valor',
+            },
+            opcoes: {
+                mostrarLegenda: false,
+                mapa: {
+                    nome: 'BR',
+                },
+            },
+        }
+
+        const imagem = await gerarImagemGraficoPngBase64(grafico, {
+            largura: 640,
+            altura: 480,
+        })
+
+        const bufferDecodificado = Buffer.from(imagem.base64, 'base64')
+
+        expect(imagem.mimeType).toBe('image/png')
+        expect(bufferDecodificado.subarray(0, 8)).toEqual(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+    })
 })

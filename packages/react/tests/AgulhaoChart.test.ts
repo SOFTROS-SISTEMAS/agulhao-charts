@@ -23,4 +23,30 @@ describe('AgulhaoChart', () => {
         expect(typeof AgulhaoChart).toBe('function')
         expect(grafico.tipo).toBe('linha')
     })
+
+    it('aceita grafico de mapa com o mapa padrao do Brasil', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'mapa',
+            dataset: {
+                linhas: [
+                    {
+                        estado: 'São Paulo',
+                        valor: 46649,
+                    },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'estado',
+                valor: 'valor',
+            },
+            opcoes: {
+                mapa: {
+                    nome: 'BR',
+                },
+            },
+        }
+
+        expect(typeof AgulhaoChart).toBe('function')
+        expect(grafico.opcoes?.mapa?.nome).toBe('BR')
+    })
 })

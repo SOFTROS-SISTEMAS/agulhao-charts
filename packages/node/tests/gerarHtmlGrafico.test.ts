@@ -38,4 +38,34 @@ describe('gerarHtmlGrafico', () => {
         expect(html).toContain('"data":[150,230]')
         expect(html).toContain('"type":"line"')
     })
+
+    it('registra o mapa padrao do Brasil no html de grafico de mapa', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'mapa',
+            titulo: 'Indicador por estado',
+            dataset: {
+                linhas: [
+                    {
+                        estado: 'São Paulo',
+                        valor: 46649,
+                    },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'estado',
+                valor: 'valor',
+            },
+            opcoes: {
+                mapa: {
+                    nome: 'BR',
+                },
+            },
+        }
+
+        const html = gerarHtmlGrafico(grafico)
+
+        expect(html).toContain("echarts.registerMap('BR'")
+        expect(html).toContain('"type":"FeatureCollection"')
+        expect(html).toContain('"map":"BR"')
+    })
 })

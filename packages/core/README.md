@@ -59,6 +59,7 @@ const grafico: DefinicaoGrafico = {
 
 ```ts
 export { criarOpcaoECharts }
+export { obterGeoJsonMapaBrasil, obterNomeMapa }
 
 export type {
     ColunaGrafico,

@@ -98,6 +98,38 @@ const graficoGauge: DefinicaoGrafico = {
 }
 ```
 
+## Mapa padrão do Brasil
+
+Para gráficos `tipo: 'mapa'` com `opcoes.mapa.nome: 'BR'`, o componente registra automaticamente o GeoJSON padrão dos estados brasileiros fornecido pelo `core`.
+
+```tsx
+const graficoMapa: DefinicaoGrafico = {
+    tipo: 'mapa',
+    titulo: 'Indicador por estado',
+    dataset: {
+        linhas: [
+            { estado: 'São Paulo', valor: 46649 },
+            { estado: 'Minas Gerais', valor: 21412 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'estado',
+        valor: 'valor',
+    },
+    opcoes: {
+        mostrarLegenda: false,
+        mapa: {
+            nome: 'BR',
+            tamanho: '82%',
+            centro: {
+                x: '43%',
+                y: '55%',
+            },
+        },
+    },
+}
+```
+
 ## Props
 
 ```ts
@@ -110,6 +142,7 @@ type AgulhaoChartProps = {
     notMerge?: boolean
     lazyUpdate?: boolean
     onEvents?: Record<string, (params: unknown) => void>
+    echarts?: unknown
 }
 ```
 

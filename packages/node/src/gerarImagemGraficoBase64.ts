@@ -3,6 +3,7 @@ import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type * as ECharts from 'echarts/types/dist/echarts'
 import type { ImagemGraficoBase64, OpcoesImagemGrafico } from './types.js'
+import { registrarMapasPadrao } from './registrarMapasPadrao.js'
 
 const require = createRequire(import.meta.url)
 const echarts = require('echarts') as typeof ECharts
@@ -13,6 +14,8 @@ const echarts = require('echarts') as typeof ECharts
 export function gerarImagemGraficoBase64(grafico: DefinicaoGrafico, opcoes: OpcoesImagemGrafico = {}): ImagemGraficoBase64 {
     const largura = opcoes.largura ?? 800
     const altura = opcoes.altura ?? 600
+    registrarMapasPadrao(echarts, grafico)
+
     const instancia = echarts.init(null, null, {
         renderer: 'svg',
         ssr: true,

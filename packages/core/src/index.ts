@@ -1,4 +1,5 @@
 export { criarOpcaoECharts } from './buildEChartsOption.js'
+export { obterGeoJsonMapaBrasil, obterNomeMapa } from './mapasPadrao.js'
 export type {
     ColunaGrafico,
     CorSerieGrafico,

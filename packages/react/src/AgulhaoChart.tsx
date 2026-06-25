@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
 import type { ComponentType, CSSProperties } from 'react'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
+import { echarts, registrarMapasPadrao } from './registrarMapasPadrao.js'
 
 export type AgulhaoChartProps = {
     grafico: DefinicaoGrafico
@@ -13,6 +14,7 @@ export type AgulhaoChartProps = {
     notMerge?: boolean
     lazyUpdate?: boolean
     onEvents?: Record<string, (params: unknown) => void>
+    echarts?: unknown
 }
 
 type ReactEChartsProps = {
@@ -22,6 +24,7 @@ type ReactEChartsProps = {
     notMerge?: boolean
     lazyUpdate?: boolean
     onEvents?: Record<string, (params: unknown) => void>
+    echarts?: unknown
 }
 
 const ReactECharts = (ReactEChartsModule.default ?? ReactEChartsModule) as unknown as ComponentType<ReactEChartsProps>
@@ -29,8 +32,11 @@ const ReactECharts = (ReactEChartsModule.default ?? ReactEChartsModule) as unkno
 /**
  * Componente do Agulhao Charts.
  */
-export function AgulhaoChart({ grafico, largura = '100%', altura = 400, className, style, notMerge, lazyUpdate, onEvents }: AgulhaoChartProps) {
-    const option = useMemo(() => criarOpcaoECharts(grafico), [grafico])
+export function AgulhaoChart({ grafico, largura = '100%', altura = 400, className, style, notMerge, lazyUpdate, onEvents, echarts: echartsCustomizado }: AgulhaoChartProps) {
+    const option = useMemo(() => {
+        registrarMapasPadrao(grafico)
+        return criarOpcaoECharts(grafico)
+    }, [grafico])
     const chartStyle = useMemo<CSSProperties>(
         () => ({
             width: formatarMedidaCss(largura),
@@ -40,7 +46,17 @@ export function AgulhaoChart({ grafico, largura = '100%', altura = 400, classNam
         [altura, largura, style],
     )
 
-    return <ReactECharts option={option} className={className} style={chartStyle} notMerge={notMerge} lazyUpdate={lazyUpdate} onEvents={onEvents} />
+    return (
+        <ReactECharts
+            echarts={echartsCustomizado ?? echarts}
+            option={option}
+            className={className}
+            style={chartStyle}
+            notMerge={notMerge}
+            lazyUpdate={lazyUpdate}
+            onEvents={onEvents}
+        />
+    )
 }
 
 /**

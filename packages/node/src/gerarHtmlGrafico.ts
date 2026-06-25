@@ -1,4 +1,4 @@
-import { criarOpcaoECharts } from '@softros/agulhao-charts-core'
+import { criarOpcaoECharts, obterGeoJsonMapaBrasil, obterNomeMapa } from '@softros/agulhao-charts-core'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type { OpcoesHtmlGrafico } from './types.js'
 
@@ -13,6 +13,7 @@ export function gerarHtmlGrafico(grafico: DefinicaoGrafico, opcoes: OpcoesHtmlGr
     const altura = formatarMedidaCss(opcoes.altura ?? 400)
     const tituloDocumento = escaparHtml(opcoes.tituloDocumento ?? grafico.titulo ?? 'Agulhão Charts')
     const echartsUrl = escaparHtml(opcoes.echartsUrl ?? ECHARTS_URL_PADRAO)
+    const scriptRegistroMapa = criarScriptRegistroMapa(grafico)
 
     return `<!doctype html>
 <html lang="pt-BR">
@@ -38,6 +39,7 @@ export function gerarHtmlGrafico(grafico: DefinicaoGrafico, opcoes: OpcoesHtmlGr
     <div id="grafico"></div>
     <script src="${echartsUrl}"></script>
     <script>
+        ${scriptRegistroMapa}
         const grafico = echarts.init(document.getElementById('grafico'));
         grafico.setOption(${JSON.stringify(opcaoECharts)});
     </script>
@@ -61,4 +63,12 @@ function formatarMedidaCss(valor: number | string): string {
  */
 function escaparHtml(valor: string): string {
     return valor.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')
+}
+
+function criarScriptRegistroMapa(grafico: DefinicaoGrafico): string {
+    if (obterNomeMapa(grafico) !== 'BR') {
+        return ''
+    }
+
+    return `echarts.registerMap('BR', ${JSON.stringify(obterGeoJsonMapaBrasil())});`
 }

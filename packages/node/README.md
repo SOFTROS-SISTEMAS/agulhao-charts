@@ -98,6 +98,40 @@ const graficoGauge: DefinicaoGrafico = {
 }
 ```
 
+## Mapa padrão do Brasil
+
+Para gráficos `tipo: 'mapa'` com `opcoes.mapa.nome: 'BR'`, o pacote Node registra automaticamente o GeoJSON padrão dos estados brasileiros fornecido pelo `core`. Isso permite gerar HTML, SVG e PNG sem buscar o mapa em tempo de execução.
+
+```ts
+const graficoMapa: DefinicaoGrafico = {
+    tipo: 'mapa',
+    titulo: 'Indicador por estado',
+    dataset: {
+        linhas: [
+            { estado: 'São Paulo', valor: 46649 },
+            { estado: 'Minas Gerais', valor: 21412 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'estado',
+        valor: 'valor',
+    },
+    opcoes: {
+        mostrarLegenda: false,
+        mapa: {
+            nome: 'BR',
+            tamanho: '82%',
+            centro: {
+                x: '43%',
+                y: '55%',
+            },
+        },
+    },
+}
+
+const imagem = await gerarImagemGraficoPngBase64(graficoMapa)
+```
+
 ## Gerar SVG em base64
 
 ```ts
