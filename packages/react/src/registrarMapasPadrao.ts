@@ -3,13 +3,22 @@ import { obterGeoJsonMapaBrasil, obterNomeMapa } from '@softros/agulhao-charts-c
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
 type GeoJsonRegistravel = Parameters<typeof echarts.registerMap>[1]
+type EChartsComRegistroDeMapa = {
+    registerMap?: (nome: string, geoJson: GeoJsonRegistravel) => void
+}
 
-export function registrarMapasPadrao(grafico: DefinicaoGrafico): void {
+export function registrarMapasPadrao(grafico: DefinicaoGrafico, echartsCustomizado?: unknown): void {
     if (obterNomeMapa(grafico) !== 'BR') {
         return
     }
 
-    echarts.registerMap('BR', obterGeoJsonMapaBrasil() as GeoJsonRegistravel)
-}
+    const geoJson = obterGeoJsonMapaBrasil() as GeoJsonRegistravel
+    const registradorCustomizado = (echartsCustomizado as EChartsComRegistroDeMapa | undefined)?.registerMap
 
-export { echarts }
+    if (registradorCustomizado) {
+        registradorCustomizado('BR', geoJson)
+        return
+    }
+
+    echarts.registerMap('BR', geoJson)
+}

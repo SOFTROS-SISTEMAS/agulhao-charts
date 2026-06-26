@@ -87,4 +87,29 @@ describe('gerarImagemGraficoBase64', () => {
         expect(svgDecodificado).toContain('<svg')
         expect(svgDecodificado).toContain('Indicador por estado')
     })
+
+    it('orienta usar HTML ou PNG para grafico de ranking', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            titulo: 'Ranking de vendedores',
+            dataset: {
+                linhas: [
+                    { nome: 'Ana', total: 120 },
+                    { nome: 'Bruno', total: 240 },
+                    { nome: 'Carla', total: 180 },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+        }
+
+        expect(() =>
+            gerarImagemGraficoBase64(grafico, {
+                largura: 640,
+                altura: 480,
+            }),
+        ).toThrow('ranking nao sao gerados em SVG')
+    })
 })

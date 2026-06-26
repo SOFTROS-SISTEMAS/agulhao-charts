@@ -1,4 +1,4 @@
-import { criarOpcaoECharts, obterGeoJsonMapaBrasil, obterNomeMapa } from '@softros/agulhao-charts-core'
+import { CSS_RANKING_GRAFICO, criarHtmlRankingGrafico, criarOpcaoECharts, obterGeoJsonMapaBrasil, obterNomeMapa } from '@softros/agulhao-charts-core'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 import type { OpcoesHtmlGrafico } from './types.js'
 
@@ -8,10 +8,15 @@ const ECHARTS_URL_PADRAO = 'https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0
  * Gera uma pagina HTML simples que renderiza um grafico ECharts no navegador.
  */
 export function gerarHtmlGrafico(grafico: DefinicaoGrafico, opcoes: OpcoesHtmlGrafico = {}): string {
-    const opcaoECharts = criarOpcaoECharts(grafico)
     const largura = formatarMedidaCss(opcoes.largura ?? '100%')
     const altura = formatarMedidaCss(opcoes.altura ?? 400)
     const tituloDocumento = escaparHtml(opcoes.tituloDocumento ?? grafico.titulo ?? 'Agulhão Charts')
+
+    if (grafico.tipo === 'ranking') {
+        return gerarHtmlRanking(grafico, largura, altura, tituloDocumento)
+    }
+
+    const opcaoECharts = criarOpcaoECharts(grafico)
     const echartsUrl = escaparHtml(opcoes.echartsUrl ?? ECHARTS_URL_PADRAO)
     const scriptRegistroMapa = criarScriptRegistroMapa(grafico)
 
@@ -43,6 +48,36 @@ export function gerarHtmlGrafico(grafico: DefinicaoGrafico, opcoes: OpcoesHtmlGr
         const grafico = echarts.init(document.getElementById('grafico'));
         grafico.setOption(${JSON.stringify(opcaoECharts)});
     </script>
+</body>
+</html>`
+}
+
+function gerarHtmlRanking(grafico: DefinicaoGrafico, largura: string, altura: string, tituloDocumento: string): string {
+    return `<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${tituloDocumento}</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        #grafico {
+            width: ${largura};
+            height: ${altura};
+        }
+
+        ${CSS_RANKING_GRAFICO}
+    </style>
+</head>
+<body>
+    <section id="grafico" class="agulhao-ranking">
+        ${criarHtmlRankingGrafico(grafico)}
+    </section>
 </body>
 </html>`
 }

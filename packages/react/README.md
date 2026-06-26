@@ -37,7 +37,7 @@ export function MinhaTela() {
 }
 ```
 
-O componente aceita qualquer `DefinicaoGrafico` suportada pelo pacote `core`, incluindo `barra`, `linha`, `area`, `pizza`, `gauge` e `mapa`.
+O componente aceita qualquer `DefinicaoGrafico` suportada pelo pacote `core`, incluindo `barra`, `linha`, `area`, `pizza`, `gauge`, `mapa` e `ranking`.
 
 Exemplo com cor por série:
 
@@ -93,6 +93,32 @@ const graficoGauge: DefinicaoGrafico = {
             minimo: 0,
             maximo: 100,
             mostrarProgresso: true,
+        },
+    },
+}
+```
+
+Exemplo de ranking sem ECharts:
+
+```tsx
+const graficoRanking: DefinicaoGrafico = {
+    tipo: 'ranking',
+    titulo: 'Ranking de vendedores',
+    dataset: {
+        linhas: [
+            { nome: 'Bruno', total: 240 },
+            { nome: 'Carla', total: 180 },
+            { nome: 'Ana', total: 120 },
+        ],
+    },
+    mapeamento: {
+        rotulo: 'nome',
+        valor: 'total',
+    },
+    opcoes: {
+        ranking: {
+            limite: 10,
+            mostrarPodio: true,
         },
     },
 }

@@ -1,5 +1,8 @@
 import type { EChartsOption } from 'echarts/types/dist/echarts'
-import type { DefinicaoGrafico, LinhaGrafico, TipoGrafico, ValorGrafico } from './types.js'
+import { obterRotuloDoCampo, obterValoresUnicos, validarCampoExistente } from './utils/dataset.js'
+import { converterParaNumero, normalizarValor, obterMaximo, obterMinimo, somarValores, transformarEmListaDeCampos } from './utils/normalizacoes.js'
+import { obterCorDaSerie } from './utils/series.js'
+import type { DefinicaoGrafico, TipoGrafico } from './types.js'
 
 /**
  * Traduz a definicao comum de grafico do Agulhao Charts para o objeto
@@ -7,6 +10,10 @@ import type { DefinicaoGrafico, LinhaGrafico, TipoGrafico, ValorGrafico } from '
  */
 export function criarOpcaoECharts(grafico: DefinicaoGrafico): EChartsOption {
     validarGrafico(grafico)
+
+    if (grafico.tipo === 'ranking') {
+        throw new Error('Graficos de ranking nao usam ECharts. Use criarDadosRanking para renderiza-los.')
+    }
 
     if (grafico.tipo === 'pizza') {
         return criarOpcaoPizza(grafico)
@@ -192,14 +199,6 @@ function criarOpcaoMapa(grafico: DefinicaoGrafico): EChartsOption {
     })
 }
 
-function obterMinimo(valores: number[]): number {
-    return valores.length > 0 ? Math.min(...valores) : 0
-}
-
-function obterMaximo(valores: number[]): number {
-    return valores.length > 0 ? Math.max(...valores) : 0
-}
-
 /**
  * Aplica configuracoes que podem existir em qualquer tipo de grafico, como
  * titulo, tooltip e legenda.
@@ -287,11 +286,11 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
             throw new Error('Graficos de pizza exigem mapeamento.rotulo e mapeamento.valor.')
         }
 
-        validarCampoExistente(grafico, grafico.mapeamento.rotulo)
-        validarCampoExistente(grafico, grafico.mapeamento.valor)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.rotulo)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.valor)
 
         if (grafico.mapeamento.cor) {
-            validarCampoExistente(grafico, grafico.mapeamento.cor)
+            validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.cor)
         }
 
         return
@@ -302,14 +301,14 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
             throw new Error('Graficos gauge exigem mapeamento.valor.')
         }
 
-        validarCampoExistente(grafico, grafico.mapeamento.valor)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.valor)
 
         if (grafico.mapeamento.rotulo) {
-            validarCampoExistente(grafico, grafico.mapeamento.rotulo)
+            validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.rotulo)
         }
 
         if (grafico.mapeamento.cor) {
-            validarCampoExistente(grafico, grafico.mapeamento.cor)
+            validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.cor)
         }
 
         return
@@ -320,11 +319,26 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
             throw new Error('Graficos de mapa exigem mapeamento.rotulo e mapeamento.valor.')
         }
 
-        validarCampoExistente(grafico, grafico.mapeamento.rotulo)
-        validarCampoExistente(grafico, grafico.mapeamento.valor)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.rotulo)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.valor)
 
         if (grafico.mapeamento.cor) {
-            validarCampoExistente(grafico, grafico.mapeamento.cor)
+            validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.cor)
+        }
+
+        return
+    }
+
+    if (grafico.tipo === 'ranking') {
+        if (!grafico.mapeamento.rotulo || !grafico.mapeamento.valor) {
+            throw new Error('Graficos de ranking exigem mapeamento.rotulo e mapeamento.valor.')
+        }
+
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.rotulo)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.valor)
+
+        if (grafico.mapeamento.cor) {
+            validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.cor)
         }
 
         return
@@ -334,133 +348,19 @@ function validarGrafico(grafico: DefinicaoGrafico): void {
         throw new Error('Graficos com eixo exigem mapeamento.eixoX e mapeamento.eixoY.')
     }
 
-    validarCampoExistente(grafico, grafico.mapeamento.eixoX)
+    validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.eixoX)
 
     if (grafico.mapeamento.serie) {
-        validarCampoExistente(grafico, grafico.mapeamento.serie)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.serie)
     }
 
     if (grafico.mapeamento.cor) {
-        validarCampoExistente(grafico, grafico.mapeamento.cor)
+        validarCampoExistente(grafico.dataset.linhas, grafico.mapeamento.cor)
     }
 
     for (const campo of transformarEmListaDeCampos(grafico.mapeamento.eixoY)) {
-        validarCampoExistente(grafico, campo)
+        validarCampoExistente(grafico.dataset.linhas, campo)
     }
-}
-
-/**
- * Confere se um campo citado no mapping existe nas linhas do dataset.
- *
- * O objetivo e detectar erro de configuracao, por exemplo pedir `mapping.y`
- * como `total_vendas` quando a consulta retornou `valor_total`.
- */
-function validarCampoExistente(grafico: DefinicaoGrafico, campo: string): void {
-    if (grafico.dataset.linhas.length === 0) {
-        return
-    }
-
-    if (!(campo in grafico.dataset.linhas[0])) {
-        throw new Error(`O campo "${campo}" nao foi encontrado no dataset.`)
-    }
-}
-
-/**
- * Normaliza um campo que pode ser unico ou uma lista.
- *
- * Isso permite que `mapping.y` aceite tanto `"total"` quanto
- * `["receita", "custo"]`, mantendo o restante do codigo trabalhando sempre
- * com array.
- */
-function transformarEmListaDeCampos(campo: string | string[] | undefined): string[] {
-    if (!campo) {
-        return []
-    }
-
-    return Array.isArray(campo) ? campo : [campo]
-}
-
-/**
- * Obtem os valores distintos de uma coluna do dataset.
- *
- * Nos graficos com eixo, isso vira a lista de categorias do eixo X. Quando ha
- * `mapping.series`, tambem vira a lista de grupos que dara origem a varias
- * series no ECharts.
- */
-function obterValoresUnicos(linhas: LinhaGrafico[], campo: string | undefined): string[] {
-    if (!campo) {
-        return []
-    }
-
-    return Array.from(new Set(linhas.map((linha) => normalizarValor(linha[campo]))))
-}
-
-/**
- * Soma os valores numericos de uma categoria ou grupo.
- *
- * Essa soma permite que mais de uma linha do dataset contribua para o mesmo
- * ponto do grafico. Valores nao numericos entram como zero para manter a
- * traducao previsivel.
- */
-function somarValores(valores: ValorGrafico[]): number {
-    return valores.reduce<number>((total, valor) => total + converterParaNumero(valor), 0)
-}
-
-/**
- * Converte um valor do dataset para numero.
- */
-function converterParaNumero(valor: ValorGrafico): number {
-    if (typeof valor === 'number') {
-        return valor
-    }
-
-    if (typeof valor === 'string') {
-        const numero = Number(valor)
-        return Number.isFinite(numero) ? numero : 0
-    }
-
-    return 0
-}
-
-/**
- * Converte um valor do dataset para texto estavel.
- */
-function normalizarValor(valor: ValorGrafico): string {
-    if (valor instanceof Date) {
-        return valor.toISOString()
-    }
-
-    if (valor === null) {
-        return ''
-    }
-
-    return String(valor)
-}
-
-/**
- * Busca o rotulo amigavel de um campo.
- *
- * Quando `dataset.columns` informa um `label`, ele deve aparecer na legenda do
- * grafico. Se nao houver metadado, o nome tecnico do campo continua sendo um
- * fallback valido.
- */
-function obterRotuloDoCampo(grafico: DefinicaoGrafico, campo: string): string {
-    return grafico.dataset.colunas?.find((coluna) => coluna.nome === campo)?.rotulo ?? campo
-}
-
-/**
- * Resolve a cor configurada para uma serie.
- *
- * A cor e encontrada pelo nome exibido na legenda ou pelo nome tecnico do campo.
- */
-function obterCorDaSerie(grafico: DefinicaoGrafico, nomeDaSerie: string, campoValor: string): string | undefined {
-    const cor = grafico.opcoes?.serie?.cor
-
-    if (!cor) {
-        return undefined
-    }
-
-    return cor.find((item) => item.nome === nomeDaSerie || item.nome === campoValor)?.cor
 }
 
 /**

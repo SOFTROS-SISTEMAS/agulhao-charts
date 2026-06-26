@@ -49,4 +49,25 @@ describe('AgulhaoChart', () => {
         expect(typeof AgulhaoChart).toBe('function')
         expect(grafico.opcoes?.mapa?.nome).toBe('BR')
     })
+
+    it('aceita grafico de ranking sem exigir eixos', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            dataset: {
+                linhas: [
+                    {
+                        nome: 'Ana',
+                        total: 120,
+                    },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+        }
+
+        expect(typeof AgulhaoChart).toBe('function')
+        expect(grafico.tipo).toBe('ranking')
+    })
 })

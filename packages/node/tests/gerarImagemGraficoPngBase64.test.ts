@@ -1,6 +1,20 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { gerarImagemGraficoPngBase64 } from '../src/index.js'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
+
+vi.mock('playwright', () => ({
+    chromium: {
+        launch: vi.fn(async () => ({
+            newPage: vi.fn(async () => ({
+                setContent: vi.fn(async () => undefined),
+                locator: vi.fn(() => ({
+                    screenshot: vi.fn(async () => Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
+                })),
+            })),
+            close: vi.fn(async () => undefined),
+        })),
+    },
+}))
 
 describe('gerarImagemGraficoPngBase64', () => {
     it('gera uma imagem png em base64 a partir de um grafico', async () => {
@@ -75,5 +89,31 @@ describe('gerarImagemGraficoPngBase64', () => {
 
         expect(imagem.mimeType).toBe('image/png')
         expect(bufferDecodificado.subarray(0, 8)).toEqual(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+    })
+
+    it('usa o renderizador HTML para graficos de ranking', async () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            titulo: 'Ranking de vendedores',
+            dataset: {
+                linhas: [
+                    { nome: 'Ana', total: 120 },
+                    { nome: 'Bruno', total: 240 },
+                    { nome: 'Carla', total: 180 },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+        }
+
+        const imagem = await gerarImagemGraficoPngBase64(grafico, {
+            largura: 640,
+            altura: 480,
+        })
+
+        expect(imagem.mimeType).toBe('image/png')
+        expect(imagem.buffer.subarray(0, 8)).toEqual(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
     })
 })

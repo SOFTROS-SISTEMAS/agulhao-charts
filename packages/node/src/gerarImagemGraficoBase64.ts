@@ -14,6 +14,11 @@ const echarts = require('echarts') as typeof ECharts
 export function gerarImagemGraficoBase64(grafico: DefinicaoGrafico, opcoes: OpcoesImagemGrafico = {}): ImagemGraficoBase64 {
     const largura = opcoes.largura ?? 800
     const altura = opcoes.altura ?? 600
+
+    if (grafico.tipo === 'ranking') {
+        throw new Error('Graficos de ranking nao sao gerados em SVG. Use gerarHtmlGrafico ou gerarImagemHtmlGraficoPngBase64.')
+    }
+
     registrarMapasPadrao(echarts, grafico)
 
     const instancia = echarts.init(null, null, {

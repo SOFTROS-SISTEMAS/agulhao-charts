@@ -10,6 +10,13 @@ export type OpcoesImagemGrafico = {
     altura?: number
 }
 
+export type OpcoesImagemHtmlGrafico = OpcoesImagemGrafico & {
+    tituloDocumento?: string
+    echartsUrl?: string
+    deviceScaleFactor?: number
+    timeoutMs?: number
+}
+
 export type ImagemGraficoSvgBase64 = {
     mimeType: 'image/svg+xml'
     base64: string

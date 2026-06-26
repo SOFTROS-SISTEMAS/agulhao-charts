@@ -58,9 +58,11 @@ const grafico: DefinicaoGrafico = {
 ## Exportações
 
 ```ts
+export { criarDadosRanking }
 export { criarOpcaoECharts }
 export { obterGeoJsonMapaBrasil, obterNomeMapa }
 
+export type { DadosRankingGrafico, ItemRankingGrafico }
 export type {
     ColunaGrafico,
     CorSerieGrafico,
@@ -78,7 +80,7 @@ export type {
 ## Tipos
 
 ```ts
-type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa'
+type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa' | 'ranking'
 type TipoColunaGrafico = 'texto' | 'numero' | 'data' | 'dataHora' | 'booleano'
 type ValorGrafico = string | number | boolean | Date | null
 type LinhaGrafico = Record<string, ValorGrafico>
@@ -162,6 +164,12 @@ type OpcoesGrafico = {
             calculavel?: boolean
             esquerda?: string
         }
+    }
+    ranking?: {
+        limite?: number
+        mostrarPodio?: boolean
+        ordem?: 'decrescente' | 'crescente'
+        formatadorValor?: (valor: number) => string
     }
 }
 ```

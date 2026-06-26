@@ -68,4 +68,32 @@ describe('gerarHtmlGrafico', () => {
         expect(html).toContain('"type":"FeatureCollection"')
         expect(html).toContain('"map":"BR"')
     })
+
+    it('gera html de ranking sem carregar ECharts', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            titulo: 'Ranking de vendedores',
+            dataset: {
+                linhas: [
+                    { nome: 'Ana', total: 120 },
+                    { nome: 'Bruno', total: 240 },
+                    { nome: 'Carla', total: 180 },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+        }
+
+        const html = gerarHtmlGrafico(grafico)
+
+        expect(html).toContain('Ranking de vendedores')
+        expect(html).toContain('Bruno')
+        expect(html).toContain('Carla')
+        expect(html).toContain('Ana')
+        expect(html).toContain('class="agulhao-ranking__podio"')
+        expect(html).not.toContain('echarts.init')
+        expect(html).not.toContain('echarts.min.js')
+    })
 })

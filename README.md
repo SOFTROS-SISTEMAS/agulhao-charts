@@ -4,7 +4,7 @@ Biblioteca de gráficos da SOFTROS para transformar uma definição comum de gr�
 
 O projeto é um monorepo com pacotes separados por responsabilidade:
 
-- [Core](./packages/core/README.md): tipos e função `criarOpcaoECharts`.
+- [Core](./packages/core/README.md): tipos, função `criarOpcaoECharts` e dados normalizados para ranking sem ECharts.
 - [Node](./packages/node/README.md): geração de HTML, SVG em base64 e PNG em base64.
 - [React](./packages/react/README.md): componente `AgulhaoChart`.
 

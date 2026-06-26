@@ -1,4 +1,4 @@
-export type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa'
+export type TipoGrafico = 'barra' | 'linha' | 'area' | 'pizza' | 'gauge' | 'mapa' | 'ranking'
 export type TipoColunaGrafico = 'texto' | 'numero' | 'data' | 'dataHora' | 'booleano'
 export type ValorGrafico = string | number | boolean | Date | null
 export type LinhaGrafico = Record<string, ValorGrafico>
@@ -72,6 +72,12 @@ export type OpcoesGrafico = {
             calculavel?: boolean
             esquerda?: string
         }
+    }
+    ranking?: {
+        limite?: number
+        mostrarPodio?: boolean
+        ordem?: 'decrescente' | 'crescente'
+        formatadorValor?: (valor: number) => string
     }
 }
 
