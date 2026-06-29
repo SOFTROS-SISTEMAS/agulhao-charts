@@ -27,8 +27,8 @@ describe('criarHtmlRankingGrafico', () => {
         expect(html).toContain('Bruno')
         expect(html).toContain('Carla')
         expect(html).toContain('Ana')
-        expect(html).toContain('class="agulhao-ranking__podio"')
-        expect(html).toContain('class="agulhao-ranking__lista"')
+        expect(html).toContain('class="agulhao-ranking-podio"')
+        expect(html).toContain('class="agulhao-ranking-lista"')
     })
 
     it('escapa textos interpolados no html', () => {

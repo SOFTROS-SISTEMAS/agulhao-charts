@@ -92,7 +92,7 @@ describe('gerarHtmlGrafico', () => {
         expect(html).toContain('Bruno')
         expect(html).toContain('Carla')
         expect(html).toContain('Ana')
-        expect(html).toContain('class="agulhao-ranking__podio"')
+        expect(html).toContain('class="agulhao-ranking-podio"')
         expect(html).not.toContain('echarts.init')
         expect(html).not.toContain('echarts.min.js')
     })

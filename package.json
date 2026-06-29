@@ -5,6 +5,7 @@
         "packages/*"
     ],
     "scripts": {
+        "verify": "npm run build -w packages/core && npm test -w packages/core && npm run build -w packages/node && npm test -w packages/node && npm run build -w packages/react && npm test -w packages/react",
         "build": "npm run build --workspaces",
         "test": "npm test --workspaces"
     }
