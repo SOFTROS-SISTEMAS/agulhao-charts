@@ -7,3 +7,5 @@ npm-errors.log
 
 .DS_Store
 .vscode/
+
+playground/
