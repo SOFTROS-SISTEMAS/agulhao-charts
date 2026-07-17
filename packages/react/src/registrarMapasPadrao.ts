@@ -1,4 +1,4 @@
-import echarts = require('echarts')
+import * as echarts from 'echarts'
 import { obterGeoJsonMapaBrasil, obterNomeMapa } from '@softros/agulhao-charts-core'
 import type { DefinicaoGrafico } from '@softros/agulhao-charts-core'
 
