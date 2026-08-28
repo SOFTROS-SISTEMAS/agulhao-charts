@@ -14,6 +14,9 @@ export type DadosRankingGrafico = {
     titulo?: string
     subtitulo?: string
     mostrarPodio: boolean
+    mostrarTotal: boolean
+    total: number
+    totalFormatado: string
     itens: ItemRankingGrafico[]
     maximo: number
 }
@@ -31,12 +34,14 @@ export function criarDadosRanking(grafico: DefinicaoGrafico): DadosRankingGrafic
     const ordem = grafico.opcoes?.ranking?.ordem ?? 'decrescente'
     const limite = grafico.opcoes?.ranking?.limite
     const formatadorValor = grafico.opcoes?.ranking?.formatadorValor ?? formatarNumero
-    const itensOrdenados = grafico.dataset.linhas
-        .map((linha) => ({
-            rotulo: normalizarValor(linha[campoRotulo]),
-            valor: converterParaNumero(linha[campoValor]),
-            cor: campoCor ? normalizarValor(linha[campoCor]) : undefined,
-        }))
+    const itens = grafico.dataset.linhas.map((linha) => ({
+        rotulo: normalizarValor(linha[campoRotulo]),
+        valor: converterParaNumero(linha[campoValor]),
+        cor: campoCor ? normalizarValor(linha[campoCor]) : undefined,
+    }))
+
+    const total = itens.reduce((soma, item) => soma + item.valor, 0)
+    const itensOrdenados = itens
         .sort((a, b) => (ordem === 'decrescente' ? b.valor - a.valor : a.valor - b.valor))
         .slice(0, limite && limite > 0 ? limite : undefined)
         .map<ItemRankingGrafico>((item, indice) => ({
@@ -51,6 +56,9 @@ export function criarDadosRanking(grafico: DefinicaoGrafico): DadosRankingGrafic
         titulo: grafico.titulo,
         subtitulo: grafico.opcoes?.subtitulo,
         mostrarPodio: grafico.opcoes?.ranking?.mostrarPodio ?? true,
+        mostrarTotal: grafico.opcoes?.ranking?.mostrarTotal ?? true,
+        total,
+        totalFormatado: formatadorValor(total),
         itens: itensOrdenados,
         maximo,
     }

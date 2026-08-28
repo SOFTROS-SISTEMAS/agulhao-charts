@@ -16,6 +16,14 @@ export const CSS_RANKING_GRAFICO = `.agulhao-ranking {
 
 .agulhao-ranking-cabecalho {
     flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.agulhao-ranking-cabecalho-texto {
+    min-width: 0;
 }
 
 .agulhao-ranking-titulo {
@@ -30,6 +38,26 @@ export const CSS_RANKING_GRAFICO = `.agulhao-ranking {
     color: #6b7280;
     font-size: 13px;
     line-height: 1.35;
+}
+
+.agulhao-ranking-total {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.agulhao-ranking-total-rotulo {
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.agulhao-ranking-total-valor {
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 700;
 }
 
 .agulhao-ranking-podio {
@@ -177,9 +205,13 @@ export function criarHtmlRankingGrafico(grafico: DefinicaoGrafico): string {
     const maximo = ranking.maximo || 1
     const podio = ordenarPodio(ranking.itens.slice(0, 3))
     const htmlCabecalho =
-        ranking.titulo || ranking.subtitulo
-            ? `<header class="agulhao-ranking-cabecalho">${ranking.titulo ? `<h3 class="agulhao-ranking-titulo">${escaparHtml(ranking.titulo)}</h3>` : ''}${
+        ranking.titulo || ranking.subtitulo || ranking.mostrarTotal
+            ? `<header class="agulhao-ranking-cabecalho"><div class="agulhao-ranking-cabecalho-texto">${ranking.titulo ? `<h3 class="agulhao-ranking-titulo">${escaparHtml(ranking.titulo)}</h3>` : ''}${
                   ranking.subtitulo ? `<p class="agulhao-ranking-subtitulo">${escaparHtml(ranking.subtitulo)}</p>` : ''
+              }</div>${
+                  ranking.mostrarTotal
+                      ? `<div class="agulhao-ranking-total"><span class="agulhao-ranking-total-rotulo">Total</span><strong class="agulhao-ranking-total-valor">${escaparHtml(ranking.totalFormatado)}</strong></div>`
+                      : ''
               }</header>`
             : ''
     const htmlPodio =

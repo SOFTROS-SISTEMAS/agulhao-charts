@@ -168,6 +168,7 @@ type OpcoesGrafico = {
     ranking?: {
         limite?: number
         mostrarPodio?: boolean
+        mostrarTotal?: boolean
         ordem?: 'decrescente' | 'crescente'
         formatadorValor?: (valor: number) => string
     }

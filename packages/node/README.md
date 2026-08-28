@@ -119,6 +119,7 @@ const graficoRanking: DefinicaoGrafico = {
         ranking: {
             limite: 10,
             mostrarPodio: true,
+            mostrarTotal: true,
         },
     },
 }

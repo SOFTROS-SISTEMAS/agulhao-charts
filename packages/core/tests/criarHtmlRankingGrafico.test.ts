@@ -27,6 +27,8 @@ describe('criarHtmlRankingGrafico', () => {
         expect(html).toContain('Bruno')
         expect(html).toContain('Carla')
         expect(html).toContain('Ana')
+        expect(html).toContain('class="agulhao-ranking-total"')
+        expect(html).toContain('>540</strong>')
         expect(html).toContain('class="agulhao-ranking-podio"')
         expect(html).toContain('class="agulhao-ranking-lista"')
     })
@@ -49,5 +51,27 @@ describe('criarHtmlRankingGrafico', () => {
         expect(html).toContain('Ranking &lt;script&gt;')
         expect(html).toContain('Ana &amp; Bruno')
         expect(html).not.toContain('Ranking <script>')
+    })
+
+    it('permite ocultar o total', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            dataset: {
+                linhas: [{ nome: 'Ana', total: 120 }],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+            opcoes: {
+                ranking: {
+                    mostrarTotal: false,
+                },
+            },
+        }
+
+        const html = criarHtmlRankingGrafico(grafico)
+
+        expect(html).not.toContain('class="agulhao-ranking-total"')
     })
 })

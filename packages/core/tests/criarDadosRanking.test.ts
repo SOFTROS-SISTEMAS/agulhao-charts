@@ -33,6 +33,9 @@ describe('criarDadosRanking', () => {
             titulo: 'Ranking de vendedores',
             subtitulo: 'Mes atual',
             mostrarPodio: true,
+            mostrarTotal: true,
+            total: 630,
+            totalFormatado: '630',
             maximo: 240,
             itens: [
                 { posicao: 1, rotulo: 'Bruno', valor: 240, valorFormatado: '240' },
@@ -59,6 +62,7 @@ describe('criarDadosRanking', () => {
                 ranking: {
                     ordem: 'crescente',
                     mostrarPodio: false,
+                    mostrarTotal: false,
                 },
             },
         }
@@ -66,6 +70,36 @@ describe('criarDadosRanking', () => {
         const ranking = criarDadosRanking(grafico)
 
         expect(ranking.mostrarPodio).toBe(false)
+        expect(ranking.mostrarTotal).toBe(false)
         expect(ranking.itens.map((item) => item.rotulo)).toEqual(['Ana', 'Bruno'])
+    })
+
+    it('calcula e formata o total antes de aplicar o limite', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'ranking',
+            dataset: {
+                linhas: [
+                    { nome: 'Ana', total: 120 },
+                    { nome: 'Bruno', total: 240 },
+                    { nome: 'Carla', total: 180 },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'nome',
+                valor: 'total',
+            },
+            opcoes: {
+                ranking: {
+                    limite: 1,
+                    formatadorValor: (valor) => `R$ ${valor}`,
+                },
+            },
+        }
+
+        const ranking = criarDadosRanking(grafico)
+
+        expect(ranking.itens).toHaveLength(1)
+        expect(ranking.total).toBe(540)
+        expect(ranking.totalFormatado).toBe('R$ 540')
     })
 })
