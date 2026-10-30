@@ -28,6 +28,20 @@ export type CorSerieGrafico = {
     cor: string
 }
 
+export type RotuloGrafico = {
+    mostrar?: boolean
+    formato?: string
+    tamanhoFonte?: number
+    alturaLinha?: number
+    espacamento?: number
+    posicao?: 'inside' | 'top' | 'left' | 'right' | 'bottom' | 'center'
+    linha?: {
+        comprimento?: number
+        comprimento2?: number
+        suave?: boolean
+    }
+}
+
 export type OpcoesGrafico = {
     empilhado?: boolean
     mostrarLegenda?: boolean
@@ -45,6 +59,7 @@ export type OpcoesGrafico = {
         nome?: string
         cor?: CorSerieGrafico[]
     }
+    rotulo?: RotuloGrafico
     pizza?: {
         raio?: string
         destacarAoPassarMouse?: boolean

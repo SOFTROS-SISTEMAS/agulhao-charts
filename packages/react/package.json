@@ -22,7 +22,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && node scripts/copy-css.mjs",
         "test": "vitest run",
         "prepublishOnly": "npm run build"
     },
@@ -33,7 +33,9 @@
     },
     "dependencies": {
         "@softros/agulhao-charts-core": "^1.0.7",
-        "echarts-for-react": "^3.0.2"
+        "echarts-for-react": "^3.0.2",
+        "react-grid-layout": "^2.3.0",
+        "zod": "^4.6.7"
     },
     "peerDependencies": {
         "echarts": ">=5",

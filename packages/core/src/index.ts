@@ -11,6 +11,7 @@ export type {
     LinhaGrafico,
     MapeamentoGrafico,
     OpcoesGrafico,
+    RotuloGrafico,
     TipoColunaGrafico,
     TipoGrafico,
     ValorGrafico,

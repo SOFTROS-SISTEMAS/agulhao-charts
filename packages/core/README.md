@@ -71,6 +71,7 @@ export type {
     LinhaGrafico,
     MapeamentoGrafico,
     OpcoesGrafico,
+    RotuloGrafico,
     TipoColunaGrafico,
     TipoGrafico,
     ValorGrafico,
@@ -171,6 +172,22 @@ type OpcoesGrafico = {
         mostrarTotal?: boolean
         ordem?: 'decrescente' | 'crescente'
         formatadorValor?: (valor: number) => string
+    }
+}
+```
+
+```ts
+type RotuloGrafico = {
+    mostrar?: boolean
+    formato?: string
+    tamanhoFonte?: number
+    alturaLinha?: number
+    espacamento?: number
+    posicao?: 'inside' | 'top' | 'left' | 'right' | 'bottom' | 'center'
+    linha?: {
+        comprimento?: number
+        comprimento2?: number
+        suave?: boolean
     }
 }
 ```
@@ -714,6 +731,36 @@ Campos disponíveis:
 - `minimo`: menor valor do gauge
 - `maximo`: maior valor do gauge
 - `mostrarProgresso`: exibe o progresso preenchido
+
+### opcoes.rotulo
+
+Controla o label exibido sobre cada ponto/fatia/região e, em pizza, também a linha-guia (`labelLine`) até o label. É genérico: funciona em `pizza`, `barra`/`linha`/`area` (eixo), `gauge` (vira o `detail`, o valor central) e `mapa`.
+
+```ts
+opcoes: {
+    rotulo: {
+        formato: '{b}\n {c} ({d}%)',
+        tamanhoFonte: 18,
+        alturaLinha: 20,
+        espacamento: 10,
+        linha: {
+            comprimento: 40,
+            comprimento2: 40,
+            suave: false,
+        },
+    },
+}
+```
+
+Campos:
+
+- `mostrar`: exibe ou esconde o label. Quando `opcoes.rotulo` é informado, o padrão é `true`.
+- `formato`: string no formato de template do ECharts (ex.: `'{b}: {c} ({d}%)'`). Os placeholders variam por tipo de gráfico — em pizza, `{b}` é o nome, `{c}` o valor e `{d}` o percentual; em gauge, use `{value}`.
+- `tamanhoFonte`, `alturaLinha`, `espacamento`: equivalentes a `fontSize`, `lineHeight` e `padding` do ECharts.
+- `posicao`: posição do label (`'top'` por padrão em gráficos com eixo).
+- `linha.comprimento`, `linha.comprimento2`, `linha.suave`: equivalentes a `labelLine.length`, `labelLine.length2` e `labelLine.smooth`. Só têm efeito em `pizza`.
+
+Em `gauge`, `rotulo.formato` e `rotulo.tamanhoFonte` controlam o `detail` (o valor central exibido no marcador).
 
 ## Validação e conversão de valores
 

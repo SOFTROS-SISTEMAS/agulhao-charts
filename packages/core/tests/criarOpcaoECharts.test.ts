@@ -224,6 +224,124 @@ describe('criarOpcaoECharts', () => {
         })
     })
 
+    it('permite customizar label e labelLine de um grafico de pizza via opcoes.rotulo', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'pizza',
+            dataset: {
+                linhas: [
+                    { status: 'Faturado', quantidade: 10 },
+                    { status: 'Pendente', quantidade: 4 },
+                ],
+            },
+            mapeamento: {
+                rotulo: 'status',
+                valor: 'quantidade',
+            },
+            opcoes: {
+                rotulo: {
+                    formato: '{b}\n {c} ({d}%)',
+                    tamanhoFonte: 18,
+                    alturaLinha: 20,
+                    espacamento: 10,
+                    linha: {
+                        comprimento: 40,
+                        comprimento2: 40,
+                        suave: false,
+                    },
+                },
+            },
+        }
+
+        const opcao = criarOpcaoECharts(grafico)
+
+        expect(opcao).toMatchObject({
+            series: [
+                {
+                    label: {
+                        show: true,
+                        formatter: '{b}\n {c} ({d}%)',
+                        fontSize: 18,
+                        lineHeight: 20,
+                        padding: 10,
+                    },
+                    labelLine: {
+                        length: 40,
+                        length2: 40,
+                        smooth: false,
+                    },
+                },
+            ],
+        })
+    })
+
+    it('permite customizar o label de series em graficos com eixo via opcoes.rotulo', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'barra',
+            dataset: {
+                linhas: [
+                    { dia: 'Seg', valor: 120 },
+                    { dia: 'Ter', valor: 200 },
+                ],
+            },
+            mapeamento: {
+                eixoX: 'dia',
+                eixoY: 'valor',
+            },
+            opcoes: {
+                rotulo: {
+                    formato: '{c}',
+                },
+            },
+        }
+
+        const opcao = criarOpcaoECharts(grafico)
+
+        expect(opcao).toMatchObject({
+            series: [
+                {
+                    label: {
+                        show: true,
+                        formatter: '{c}',
+                        position: 'top',
+                    },
+                },
+            ],
+        })
+    })
+
+    it('permite customizar o detail de um grafico gauge via opcoes.rotulo', () => {
+        const grafico: DefinicaoGrafico = {
+            tipo: 'gauge',
+            dataset: {
+                linhas: [{ indicador: 'Conversao', percentual: 72 }],
+            },
+            mapeamento: {
+                rotulo: 'indicador',
+                valor: 'percentual',
+            },
+            opcoes: {
+                rotulo: {
+                    formato: '{value}%',
+                    tamanhoFonte: 24,
+                },
+            },
+        }
+
+        const opcao = criarOpcaoECharts(grafico)
+
+        expect(opcao).toMatchObject({
+            series: [
+                {
+                    detail: {
+                        show: true,
+                        formatter: '{value}%',
+                        fontSize: 24,
+                    },
+                },
+            ],
+        })
+    })
+
     it('permite desabilitar a legenda do grafico', () => {
         const grafico: DefinicaoGrafico = {
             tipo: 'barra',

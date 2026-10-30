@@ -1,0 +1,21 @@
+:root {
+    --ag-dashboard-cor: #e3e7e8;
+}
+
+.react-grid-item.react-grid-placeholder {
+    background: #2563eb;
+    border-radius: 0.8rem;
+    opacity: 0.15;
+}
+
+.react-grid-item>.react-resizable-handle {
+    opacity: 0;
+}
+
+.drag-handle {
+    cursor: grab !important;
+}
+
+.drag-handle:active {
+    cursor: grabbing !important;
+}

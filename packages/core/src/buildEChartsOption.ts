@@ -2,7 +2,7 @@ import type { EChartsOption } from 'echarts/types/dist/echarts'
 import { obterRotuloDoCampo, obterValoresUnicos, validarCampoExistente } from './utils/dataset.js'
 import { converterParaNumero, normalizarValor, obterMaximo, obterMinimo, somarValores, transformarEmListaDeCampos } from './utils/normalizacoes.js'
 import { obterCorDaSerie } from './utils/series.js'
-import type { DefinicaoGrafico, TipoGrafico } from './types.js'
+import type { DefinicaoGrafico, OpcoesGrafico, TipoGrafico } from './types.js'
 
 /**
  * Traduz a definicao comum de grafico do Agulhao Charts para o objeto
@@ -82,6 +82,8 @@ function criarOpcaoPizza(grafico: DefinicaoGrafico): EChartsOption {
                 name: grafico.opcoes?.serie?.nome ?? grafico.titulo,
                 type: 'pie',
                 radius: grafico.opcoes?.pizza?.raio ?? '65%',
+                label: criarRotulo(grafico.opcoes),
+                labelLine: criarLinhaRotulo(grafico.opcoes),
                 data: dataset.linhas.map((linha) => ({
                     name: normalizarValor(linha[campoRotulo as string]),
                     value: converterParaNumero(linha[campoValor as string]),
@@ -140,6 +142,13 @@ function criarOpcaoGauge(grafico: DefinicaoGrafico): EChartsOption {
                           color: corDaSerie,
                       }
                     : undefined,
+                detail: opcoes?.rotulo
+                    ? {
+                          show: opcoes.rotulo.mostrar ?? true,
+                          formatter: opcoes.rotulo.formato,
+                          fontSize: opcoes.rotulo.tamanhoFonte,
+                      }
+                    : undefined,
                 data: dataset.linhas.map((linha) => ({
                     name: campoRotulo ? normalizarValor(linha[campoRotulo]) : (opcoes?.serie?.nome ?? grafico.titulo),
                     value: converterParaNumero(linha[campoValor as string]),
@@ -180,6 +189,7 @@ function criarOpcaoMapa(grafico: DefinicaoGrafico): EChartsOption {
                 roam: opcoesMapa?.permitirZoom ?? true,
                 layoutSize: opcoesMapa?.tamanho,
                 layoutCenter: opcoesMapa?.centro ? [opcoesMapa.centro.x ?? '50%', opcoesMapa.centro.y ?? '50%'] : undefined,
+                label: criarRotulo(opcoes),
                 emphasis: {
                     label: {
                         show: opcoesMapa?.mostrarRotuloAoDestacar ?? true,
@@ -197,6 +207,49 @@ function criarOpcaoMapa(grafico: DefinicaoGrafico): EChartsOption {
             },
         ],
     })
+}
+
+/**
+ * Monta o objeto `label` do ECharts a partir de `opcoes.rotulo`.
+ *
+ * `opcoes.rotulo` e generico e reaproveitado por pizza, eixo e mapa. Quando
+ * nao informado, retorna `undefined` e o grafico usa o comportamento padrao
+ * do ECharts para aquele tipo.
+ */
+function criarRotulo(opcoes: OpcoesGrafico | undefined, posicaoPadrao?: string): Record<string, unknown> | undefined {
+    const rotulo = opcoes?.rotulo
+
+    if (!rotulo) {
+        return undefined
+    }
+
+    return {
+        show: rotulo.mostrar ?? true,
+        formatter: rotulo.formato,
+        fontSize: rotulo.tamanhoFonte,
+        lineHeight: rotulo.alturaLinha,
+        padding: rotulo.espacamento,
+        position: rotulo.posicao ?? posicaoPadrao,
+    }
+}
+
+/**
+ * Monta o objeto `labelLine` do ECharts a partir de `opcoes.rotulo.linha`.
+ *
+ * `labelLine` so existe em series do tipo pizza/funil no ECharts.
+ */
+function criarLinhaRotulo(opcoes: OpcoesGrafico | undefined): Record<string, unknown> | undefined {
+    const linha = opcoes?.rotulo?.linha
+
+    if (!linha) {
+        return undefined
+    }
+
+    return {
+        length: linha.comprimento,
+        length2: linha.comprimento2,
+        smooth: linha.suave,
+    }
 }
 
 /**
@@ -250,6 +303,7 @@ function criarSerieComEixos(grafico: DefinicaoGrafico, campoValor: string, categ
         type: traduzirTipoGrafico(grafico.tipo),
         stack: opcoes?.empilhado ? 'total' : undefined,
         areaStyle: grafico.tipo === 'area' ? {} : undefined,
+        label: criarRotulo(opcoes, 'top'),
         lineStyle:
             corDaSerie && grafico.tipo !== 'barra'
                 ? {

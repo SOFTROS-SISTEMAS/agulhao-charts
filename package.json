@@ -6,8 +6,14 @@
     ],
     "scripts": {
         "plg:ranking": "vite --open /playground/ranking.html",
+        "plg:react": "vite --open /playground/react/react.html",
         "verify": "npm run build -w packages/core && npm test -w packages/core && npm run build -w packages/node && npm test -w packages/node && npm run build -w packages/react && npm test -w packages/react",
         "build": "npm run build --workspaces",
         "test": "npm test --workspaces"
+    },
+    "devDependencies": {
+        "@types/react-dom": "^19.1.6",
+        "@vitejs/plugin-react": "^4.3.4",
+        "react-dom": "^19.1.0"
     }
 }

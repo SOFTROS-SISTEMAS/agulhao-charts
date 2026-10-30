@@ -51,6 +51,7 @@ export function AgulhaoChart({
         registrarMapasPadrao(grafico, echartsCustomizado)
         return criarOpcaoECharts(grafico)
     }, [echartsCustomizado, grafico])
+
     const chartStyle = useMemo<CSSProperties>(
         () => ({
             width: formatarMedidaCss(largura),
