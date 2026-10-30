@@ -1,17 +1,47 @@
 import { z } from 'zod'
 import { LayoutItem } from 'react-grid-layout'
 import { AgulhaoDashboardWidget } from '../types'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { statusPedidoAgulhao, zodStringToJson } from '../../utils'
 import { AgulhaoChart } from '../../chart'
 import { Estrutura } from '../estrutura'
 import { inteiro, milhares } from '../../formatacoes'
+import { useDashboard } from '../context'
 
 export function AcompanhamentoPedidos(w: AgulhaoDashboardWidget) {
+    const { atualizaWidget } = useDashboard()
+
+    const [carregando, setCarregando] = useState(false)
     const [dados, setDados] = useState<Dados | null>(zodStringToJson(w.conteudo || '{}', schema).data || null)
+    const intervalo = useRef<number | null>(null)
+
+    useEffect(() => {
+        if (w.atualizaEmSegundos && w.atualizaEmSegundos > 0) {
+            intervalo.current = window.setInterval(() => {
+                atualizar()
+            }, w.atualizaEmSegundos * 1000)
+        }
+
+        return () => {
+            if (intervalo.current) {
+                clearInterval(intervalo.current)
+            }
+        }
+    }, [])
+
+    const atualizar = async () => {
+        setCarregando(true)
+        const resultado = await atualizaWidget(w.widgetId, w.id)
+        setCarregando(false)
+
+        if (resultado) {
+            const dadosAtualizados = zodStringToJson(resultado, schema).data || null
+            setDados(dadosAtualizados)
+        }
+    }
 
     return (
-        <Estrutura id={w.id} titulo={w.titulo} descricao={w.descricao} ultimaSincronizacao={w.ultimaSincronizacao}>
+        <Estrutura id={w.id} titulo={w.titulo} descricao={w.descricao} ultimaSincronizacao={w.ultimaSincronizacao} carregando={carregando}>
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <AgulhaoChart
                     style={{ flexGrow: 1 }}

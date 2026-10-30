@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-export function Estrutura({ children, titulo, descricao, ultimaSincronizacao, id }: EstruturaProps) {
+export function Estrutura({ children, titulo, descricao, ultimaSincronizacao, id, carregando }: EstruturaProps) {
     return (
         <div
             id={id}
@@ -23,9 +23,10 @@ export function Estrutura({ children, titulo, descricao, ultimaSincronizacao, id
                 <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>{titulo}</p>
                 <p style={{ fontSize: '0.75rem', color: '#646464' }}>{descricao}</p>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto' }}>{children}</div>
+            <div style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>{children}</div>
             <div style={{ borderTop: '1px solid var(--ag-dashboard-cor)', padding: '0.3rem 0.5rem', fontSize: '0.75rem', color: '#767676' }}>
                 <p>{ultimaSincronizacao || 'Nenhuma sincronização realizada'}</p>
+                {carregando && <p>Carregando...</p>}
             </div>
         </div>
     )
@@ -37,4 +38,5 @@ interface EstruturaProps {
     descricao?: string
     ultimaSincronizacao?: string
     id: string
+    carregando?: boolean
 }
