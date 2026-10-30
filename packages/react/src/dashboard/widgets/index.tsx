@@ -4,6 +4,7 @@ import { AcompanhamentoPedidos, AcompanhamentoPedidosLayout } from './acompanham
 import { GraficoVendasUltimos12Meses, GraficoVendasUltimos12MesesLayout } from './graficoVendasUltimos12meses'
 import { GraficoReceitasMesPlanoContas, GraficoReceitasMesPlanoContasLayout } from './graficoReceitasMesPlanoContas'
 import { GraficoVendasMesTipoLancamento, GraficoVendasMesTipoLancamentoLayout } from './graficoVendasMesTipoLancamento'
+import { GraficoDespesasMesGrupoPlanoContas, GraficoDespesasMesGrupoPlanoContasLayout } from './graficoDespesasMesGrupoPlanoContas'
 
 export const dashboardWidgets: Map<
     string,
@@ -38,6 +39,13 @@ export const dashboardWidgets: Map<
         {
             componente: GraficoVendasMesTipoLancamento,
             layout: GraficoVendasMesTipoLancamentoLayout,
+        },
+    ],
+    [
+        'graficoDespesasMesGrupoPlanoContas',
+        {
+            componente: GraficoDespesasMesGrupoPlanoContas,
+            layout: GraficoDespesasMesGrupoPlanoContasLayout,
         },
     ],
 ])

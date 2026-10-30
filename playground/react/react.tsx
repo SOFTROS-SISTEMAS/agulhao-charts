@@ -166,6 +166,21 @@ const widgets = [
             { EmpresaCodigo: '1', lancamento: 'VENDA COM DIFERIMENTO', valor: '3000.00' },
         ]),
     },
+    {
+        id: '153',
+        titulo: 'Despesas no mês por Grupo de Plano de contas',
+        descricao: 'Gráfico das despesas por Grupo de Plano de contas dentro do mês vigente',
+        widgetId: 'graficoDespesasMesGrupoPlanoContas',
+        layout: { x: 0, y: 8 },
+        conteudo: JSON.stringify([
+            { mes: '1', ano: '2020', grupoPlanoContas: 'CUSTO INDUSTRIALIZAÇÃO', valor: '64040.61' },
+            { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. ADMINISTRATIVAS', valor: '4860.87' },
+            { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. COMERCIAIS', valor: '3980.42' },
+            { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. DIRETORIA', valor: '6517.00' },
+            { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. GERAIS', valor: '12.00' },
+            { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. PESSOAL', valor: '31.00' },
+        ]),
+    },
 ]
 
 createRoot(document.getElementById('app')!).render(<App />)
