@@ -3,6 +3,7 @@ import { AgulhaoDashboardWidget } from '../types'
 import { AcompanhamentoPedidos, AcompanhamentoPedidosLayout } from './acompanhamentoPedidos'
 import { GraficoVendasUltimos12Meses, GraficoVendasUltimos12MesesLayout } from './graficoVendasUltimos12meses'
 import { GraficoReceitasMesPlanoContas, GraficoReceitasMesPlanoContasLayout } from './graficoReceitasMesPlanoContas'
+import { GraficoVendasMesTipoLancamento, GraficoVendasMesTipoLancamentoLayout } from './graficoVendasMesTipoLancamento'
 
 export const dashboardWidgets: Map<
     string,
@@ -30,6 +31,13 @@ export const dashboardWidgets: Map<
         {
             componente: GraficoReceitasMesPlanoContas,
             layout: GraficoReceitasMesPlanoContasLayout,
+        },
+    ],
+    [
+        'graficoVendasMesTipoLancamento',
+        {
+            componente: GraficoVendasMesTipoLancamento,
+            layout: GraficoVendasMesTipoLancamentoLayout,
         },
     ],
 ])

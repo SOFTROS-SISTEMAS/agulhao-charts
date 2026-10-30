@@ -154,6 +154,18 @@ const widgets = [
             { mes: '8', ano: '2026', planoContas: 'MERCADORIA VENDIDA', valor: '251.00' },
         ]),
     },
+    {
+        id: '152',
+        titulo: 'Vendas fechadas no mês por Tipo de Lançamento',
+        descricao: 'Gráfico das vendas no mês por Tipo de Lançamento',
+        widgetId: 'graficoVendasMesTipoLancamento',
+        layout: { x: 4, y: 4 },
+        conteudo: JSON.stringify([
+            { EmpresaCodigo: '1', lancamento: 'VENDA', valor: '9277.9200000000' },
+            { EmpresaCodigo: '1', lancamento: 'troca de mercadoria', valor: '2240.1500000000' },
+            { EmpresaCodigo: '1', lancamento: 'VENDA COM DIFERIMENTO', valor: '3000.00' },
+        ]),
+    },
 ]
 
 createRoot(document.getElementById('app')!).render(<App />)
