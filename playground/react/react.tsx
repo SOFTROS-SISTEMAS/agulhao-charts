@@ -93,18 +93,7 @@ function App() {
             </header>
             {tipo === 'dashboard' ? (
                 <div className="dashboard">
-                    <AgulhaoDashboard
-                        widgets={[
-                            {
-                                id: '149',
-                                titulo: 'Acompanhamento dos pedidos',
-                                descricao: 'Gráfico que apresenta a distrubuição dos pedidos conforme o status',
-                                widgetId: 'acompanhamentoPedidos',
-                                conteudo:
-                                    '{"pecasFaturadas":100,"pecas":20,"registros":10,"bruto":1000,"descontos":200,"outros":100,"liquido":100,"lista":[{"status":"ABE","quantidade":10,"valor":100},{"status":"FAT","quantidade":20,"valor":200},{"status":"EXP","quantidade":30,"valor":300},{"status":"DES","quantidade":50,"valor":500}]}',
-                            },
-                        ]}
-                    />
+                    <AgulhaoDashboard widgets={widgets} />
                 </div>
             ) : (
                 <section className="preview">
@@ -114,5 +103,36 @@ function App() {
         </div>
     )
 }
+
+const widgets = [
+    {
+        id: '149',
+        titulo: 'Acompanhamento dos pedidos',
+        descricao: 'Gráfico que apresenta a distrubuição dos pedidos conforme o status',
+        widgetId: 'acompanhamentoPedidos',
+        conteudo:
+            '{"pecasFaturadas":100,"pecas":20,"registros":10,"bruto":1000,"descontos":200,"outros":100,"liquido":100,"lista":[{"status":"ABE","quantidade":10,"valor":100},{"status":"FAT","quantidade":20,"valor":200},{"status":"EXP","quantidade":30,"valor":300},{"status":"DES","quantidade":50,"valor":500}]}',
+    },
+    {
+        id: '150',
+        titulo: 'Vendas nos últimos 12 meses',
+        descricao: 'Gráfico das vendas finalizadas nos últimos 12 meses, comparados com o ano anterior de cada mês',
+        widgetId: 'graficoVendasUltimos12meses',
+        conteudo: JSON.stringify([
+            { EmpresaCodigo: '1', mes: '9', anoAtual: '2025', anoAnterior: '2024', valorAtual: '1980.4000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '10', anoAtual: '2025', anoAnterior: '2024', valorAtual: '2240.1500000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '11', anoAtual: '2025', anoAnterior: '2024', valorAtual: '1765.9000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '12', anoAtual: '2025', anoAnterior: '2024', valorAtual: '482.3000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '1', anoAtual: '2026', anoAnterior: '2025', valorAtual: '990.5000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '2', anoAtual: '2026', anoAnterior: '2025', valorAtual: '1320.8000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '3', anoAtual: '2026', anoAnterior: '2025', valorAtual: '1653.6000000000', valorAnterior: '1712.4000000000' },
+            { EmpresaCodigo: '1', mes: '4', anoAtual: '2026', anoAnterior: '2025', valorAtual: '854.0300000000', valorAnterior: '287.8000000000' },
+            { EmpresaCodigo: '1', mes: '5', anoAtual: '2026', anoAnterior: '2025', valorAtual: '1082.7700000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '6', anoAtual: '2026', anoAnterior: '2025', valorAtual: '2808.6200000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '7', anoAtual: '2026', anoAnterior: '2025', valorAtual: '2596.3000000000', valorAnterior: '' },
+            { EmpresaCodigo: '1', mes: '8', anoAtual: '2026', anoAnterior: '2025', valorAtual: '282.6000000000', valorAnterior: '' },
+        ]),
+    },
+]
 
 createRoot(document.getElementById('app')!).render(<App />)
