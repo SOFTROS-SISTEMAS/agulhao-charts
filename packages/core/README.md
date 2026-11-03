@@ -129,6 +129,10 @@ type OpcoesGrafico = {
     mostrarLegenda?: boolean
     mostrarTooltip?: boolean
     moeda?: string
+    formatadorValor?: (valor: number) => string
+    eixoValor?: {
+        tamanhoFonte?: number
+    }
     subtitulo?: string
     titulo?: {
         esquerda?: string
@@ -788,6 +792,32 @@ Campos:
 - `linha.comprimento`, `linha.comprimento2`, `linha.suave`: equivalentes a `labelLine.length`, `labelLine.length2` e `labelLine.smooth`. Só têm efeito em `pizza`.
 
 Em `gauge`, `rotulo.formato` e `rotulo.tamanhoFonte` controlam o `detail` (o valor central exibido no marcador).
+
+### opcoes.formatadorValor
+
+Formata os valores numéricos exibidos no eixo de valores (gráficos com eixo) e no tooltip. Recebe o valor numérico puro e retorna a string já formatada — é o lugar certo para aplicar casas decimais, separador de milhares ou prefixo de moeda (ex.: reaproveitando um formatador que a aplicação já tem, como `milhares(valor, 'R$')`).
+
+```ts
+opcoes: {
+    formatadorValor: (valor) => `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+}
+```
+
+Quando informado, tem prioridade sobre `opcoes.moeda` no eixo de valores. `opcoes.rotulo.formato` continua sendo o campo certo para customizar o label exibido sobre cada ponto/fatia/barra — `formatadorValor` não afeta esse label.
+
+### opcoes.eixoValor
+
+Controla a aparência dos valores do eixo de valores (eixo Y, ou eixo X quando `opcoes.barra.horizontal` é `true`) em gráficos com eixo (`barra`/`linha`/`area`).
+
+```ts
+opcoes: {
+    eixoValor: {
+        tamanhoFonte: 14,
+    },
+}
+```
+
+- `tamanhoFonte`: tamanho da fonte dos valores do eixo, em px (`axisLabel.fontSize` do ECharts).
 
 ## Validação e conversão de valores
 

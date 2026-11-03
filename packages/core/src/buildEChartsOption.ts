@@ -50,7 +50,12 @@ function criarOpcaoComEixos(grafico: DefinicaoGrafico): EChartsOption {
     const eixoValor = {
         type: 'value' as const,
         axisLabel: {
-            formatter: opcoes?.moeda ? `{value} ${opcoes.moeda}` : '{value}',
+            formatter: opcoes?.formatadorValor
+                ? (valor: number) => opcoes.formatadorValor!(valor)
+                : opcoes?.moeda
+                  ? `{value} ${opcoes.moeda}`
+                  : '{value}',
+            fontSize: opcoes?.eixoValor?.tamanhoFonte,
         },
     }
 
@@ -277,7 +282,12 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
         tooltip:
             grafico.opcoes?.mostrarTooltip === false
                 ? undefined
-                : { trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? 'item' : 'axis' },
+                : {
+                      trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? 'item' : 'axis',
+                      valueFormatter: grafico.opcoes?.formatadorValor
+                          ? (valor: unknown) => grafico.opcoes!.formatadorValor!(Number(valor))
+                          : undefined,
+                  },
         legend:
             grafico.opcoes?.mostrarLegenda === false
                 ? undefined
