@@ -5,6 +5,10 @@ import { GraficoVendasUltimos12Meses, GraficoVendasUltimos12MesesLayout } from '
 import { GraficoReceitasMesPlanoContas, GraficoReceitasMesPlanoContasLayout } from './graficoReceitasMesPlanoContas'
 import { GraficoVendasMesTipoLancamento, GraficoVendasMesTipoLancamentoLayout } from './graficoVendasMesTipoLancamento'
 import { GraficoDespesasMesGrupoPlanoContas, GraficoDespesasMesGrupoPlanoContasLayout } from './graficoDespesasMesGrupoPlanoContas'
+import {
+    IndicadoresOrcamentosAprovadosFaturadosEntregues,
+    IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
+} from './indicadoresOrcamentosAprovadosFaturadosEntregues'
 
 export const dashboardWidgets: Map<
     string,
@@ -46,6 +50,13 @@ export const dashboardWidgets: Map<
         {
             componente: GraficoDespesasMesGrupoPlanoContas,
             layout: GraficoDespesasMesGrupoPlanoContasLayout,
+        },
+    ],
+    [
+        'indicadoresOrcamentosAprovadosFaturadosEntregues',
+        {
+            componente: IndicadoresOrcamentosAprovadosFaturadosEntregues,
+            layout: IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
         },
     ],
 ])

@@ -181,6 +181,18 @@ const widgets = [
             { mes: '1', ano: '2020', grupoPlanoContas: 'DESP. PESSOAL', valor: '31.00' },
         ]),
     },
+    {
+        id: '154',
+        titulo: 'Orçamentos, Aprovados, Faturados e Entregues',
+        descricao: 'Visualização dos Pedidos Orçados, Aprovados, Faturados e Entregues no Período.',
+        widgetId: 'indicadoresOrcamentosAprovadosFaturadosEntregues',
+        conteudo: JSON.stringify({
+            ValorOrcamentos: '128500.00',
+            ValorAprovados: '96200.00',
+            ValorFaturados: '81300.00',
+            ValorEntregues: '74800.00',
+        }),
+    },
 ]
 
 createRoot(document.getElementById('app')!).render(<App />)
