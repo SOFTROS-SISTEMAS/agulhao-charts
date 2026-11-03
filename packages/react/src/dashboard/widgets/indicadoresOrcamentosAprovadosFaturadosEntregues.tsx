@@ -2,16 +2,24 @@ import { z } from 'zod'
 import { LayoutItem } from 'react-grid-layout'
 import { AgulhaoDashboardWidget } from '../types'
 import { useEffect, useRef, useState } from 'react'
+import { FileText, CheckCircle2, Receipt, PackageCheck } from 'lucide-react'
 import { zodStringToJson } from '../../utils'
 import { Estrutura } from '../estrutura'
 import { milhares } from '../../formatacoes'
 import { useDashboard } from '../context'
 
+const paletas = {
+    azul: { cardFundo: '#EFF6FF', badgeFundo: '#DBEAFE', texto: '#1E40AF', forte: '#2563EB' },
+    roxo: { cardFundo: '#F5F3FF', badgeFundo: '#E9E5FF', texto: '#5B21B6', forte: '#7C3AED' },
+    laranja: { cardFundo: '#FFF7ED', badgeFundo: '#FFEAD5', texto: '#9A3412', forte: '#EA580C' },
+    verde: { cardFundo: '#F1FAF4', badgeFundo: '#D7F0DF', texto: '#166534', forte: '#16A34A' },
+} as const
+
 const etapas = [
-    { campo: 'ValorOrcamentos', rotulo: 'Orçamentos' },
-    { campo: 'ValorAprovados', rotulo: 'Aprovados' },
-    { campo: 'ValorFaturados', rotulo: 'Faturados' },
-    { campo: 'ValorEntregues', rotulo: 'Entregues' },
+    { campo: 'ValorOrcamentos', rotulo: 'Orçamentos', cor: paletas.azul, Icone: FileText },
+    { campo: 'ValorAprovados', rotulo: 'Aprovados', cor: paletas.roxo, Icone: CheckCircle2 },
+    { campo: 'ValorFaturados', rotulo: 'Faturados', cor: paletas.laranja, Icone: Receipt },
+    { campo: 'ValorEntregues', rotulo: 'Entregues', cor: paletas.verde, Icone: PackageCheck },
 ] as const
 
 export function IndicadoresOrcamentosAprovadosFaturadosEntregues(w: AgulhaoDashboardWidget) {
@@ -46,30 +54,49 @@ export function IndicadoresOrcamentosAprovadosFaturadosEntregues(w: AgulhaoDashb
         }
     }
 
-    const valores = etapas.map((e) => dados?.[e.campo] || 0)
-    const base = valores[0]
-
     return (
-        <Estrutura id={w.id} titulo={w.titulo} descricao={w.descricao} ultimaSincronizacao={w.ultimaSincronizacao} carregando={carregando}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px', padding: '1rem' }}>
-                {etapas.map((e, i) => {
-                    const valor = valores[i]
-                    const percentualAnterior = i === 0 ? null : valores[i - 1] ? (valor / valores[i - 1]) * 100 : 0
-                    const percentualBase = base ? (valor / base) * 100 : 0
-
-                    return (
-                        <div key={e.campo}>
-                            <p style={{ margin: 0, fontSize: '0.75rem', color: '#646464' }}>{e.rotulo}</p>
-                            <p style={{ margin: '2px 0', fontSize: '1.25rem', fontWeight: 'bold' }}>R$ {milhares(valor)}</p>
-                            <p style={{ margin: '0 0 6px', fontSize: '0.75rem', color: '#646464' }}>
-                                {percentualAnterior === null ? 'base' : `${milhares(percentualAnterior)}% do anterior`}
-                            </p>
-                            <div style={{ height: '6px', borderRadius: '4px', background: 'var(--ag-dashboard-cor)', overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${Math.min(percentualBase, 100)}%`, background: '#235DD9' }} />
+        <Estrutura
+            id={w.id}
+            titulo={w.titulo}
+            descricao={w.descricao}
+            ultimaSincronizacao={w.ultimaSincronizacao}
+            carregando={carregando}
+            periodo={dados?.periodo}>
+            <div style={{ padding: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+                    {etapas.map((e) => (
+                        <div
+                            key={e.campo}
+                            style={{
+                                background: e.cor.cardFundo,
+                                border: `1px solid ${e.cor.badgeFundo}`,
+                                borderRadius: '14px',
+                                padding: '0.8rem 1rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                            }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div
+                                    style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        minWidth: '30px',
+                                        borderRadius: '50%',
+                                        background: e.cor.badgeFundo,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: e.cor.forte,
+                                    }}>
+                                    <e.Icone size={16} />
+                                </div>
+                                <p style={{ margin: 0, fontSize: '0.78rem', fontWeight: 600, color: e.cor.texto }}>{e.rotulo}</p>
                             </div>
+                            <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: e.cor.forte }}>R$ {milhares(dados?.[e.campo] || 0)}</p>
                         </div>
-                    )
-                })}
+                    ))}
+                </div>
             </div>
         </Estrutura>
     )
@@ -79,11 +106,9 @@ export const IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout: LayoutItem 
     i: 'indicadoresOrcamentosAprovadosFaturadosEntregues',
     x: 0,
     y: 0,
-    w: 6,
+    w: 4,
     h: 2,
-    minW: 2,
-    minH: 2,
-    isResizable: true,
+    isResizable: false,
     isDraggable: true,
 }
 
@@ -92,6 +117,7 @@ const schema = z.object({
     ValorAprovados: z.coerce.number(),
     ValorFaturados: z.coerce.number(),
     ValorEntregues: z.coerce.number(),
+    periodo: z.string().optional(),
 })
 
 type Dados = z.infer<typeof schema>

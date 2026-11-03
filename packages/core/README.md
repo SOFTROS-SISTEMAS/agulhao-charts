@@ -123,6 +123,9 @@ type CorSerieGrafico = {
 ```ts
 type OpcoesGrafico = {
     empilhado?: boolean
+    barra?: {
+        horizontal?: boolean
+    }
     mostrarLegenda?: boolean
     mostrarTooltip?: boolean
     moeda?: string
@@ -249,6 +252,30 @@ const grafico: DefinicaoGrafico = {
     mapeamento: {
         eixoX: 'dia',
         eixoY: 'pedidos',
+    },
+}
+```
+
+Use `opcoes.barra.horizontal` para inverter os eixos (categorias no eixo Y, valores no eixo X) — útil quando os rótulos das categorias são longos:
+
+```ts
+const grafico: DefinicaoGrafico = {
+    tipo: 'barra',
+    titulo: 'Despesas por grupo',
+    dataset: {
+        linhas: [
+            { grupo: 'DESP. ADMINISTRATIVAS', valor: 4860.87 },
+            { grupo: 'CUSTO INDUSTRIALIZAÇÃO', valor: 64040.61 },
+        ],
+    },
+    mapeamento: {
+        eixoX: 'grupo',
+        eixoY: 'valor',
+    },
+    opcoes: {
+        barra: {
+            horizontal: true,
+        },
     },
 }
 ```

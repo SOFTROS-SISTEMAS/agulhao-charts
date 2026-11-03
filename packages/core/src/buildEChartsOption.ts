@@ -41,21 +41,26 @@ function criarOpcaoComEixos(grafico: DefinicaoGrafico): EChartsOption {
     const camposY = transformarEmListaDeCampos(mapeamento.eixoY)
     const categorias = obterValoresUnicos(dataset.linhas, mapeamento.eixoX)
     const gruposDeSerie = mapeamento.serie ? obterValoresUnicos(dataset.linhas, mapeamento.serie) : []
+    const horizontal = grafico.tipo === 'barra' && opcoes?.barra?.horizontal === true
+
+    const eixoCategoria = {
+        type: 'category' as const,
+        data: categorias,
+    }
+    const eixoValor = {
+        type: 'value' as const,
+        axisLabel: {
+            formatter: opcoes?.moeda ? `{value} ${opcoes.moeda}` : '{value}',
+        },
+    }
 
     return aplicarOpcoesComuns(grafico, {
         grid: {
             bottom: grafico.opcoes?.mostrarLegenda === false ? undefined : 64,
+            containLabel: true,
         },
-        xAxis: {
-            type: 'category',
-            data: categorias,
-        },
-        yAxis: {
-            type: 'value',
-            axisLabel: {
-                formatter: opcoes?.moeda ? `{value} ${opcoes.moeda}` : '{value}',
-            },
-        },
+        xAxis: horizontal ? eixoValor : eixoCategoria,
+        yAxis: horizontal ? eixoCategoria : eixoValor,
         series:
             gruposDeSerie.length > 0 && camposY.length === 1
                 ? gruposDeSerie.map((grupo) => criarSerieComEixos(grafico, camposY[0], categorias, grupo))

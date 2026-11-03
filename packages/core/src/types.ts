@@ -44,6 +44,9 @@ export type RotuloGrafico = {
 
 export type OpcoesGrafico = {
     empilhado?: boolean
+    barra?: {
+        horizontal?: boolean
+    }
     mostrarLegenda?: boolean
     mostrarTooltip?: boolean
     moeda?: string

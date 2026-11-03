@@ -191,6 +191,21 @@ const widgets = [
             ValorAprovados: '96200.00',
             ValorFaturados: '81300.00',
             ValorEntregues: '74800.00',
+            periodo: '01/10/2026 a 31/10/2026',
+        }),
+    },
+    {
+        id: '157',
+        titulo: 'Indicadores do contas a Receber e a Pagar',
+        descricao: 'Visualização de indicadores do contas a receber e a pagar, vencidos, vencendo hoje e a vencer.',
+        widgetId: 'indicadoresReceberPagar',
+        conteudo: JSON.stringify({
+            receber_vencidas: '18420.50',
+            receber_Hoje: '5230.00',
+            receber_aVencer: '42310.75',
+            pagar_vencidas: '9870.30',
+            pagar_Hoje: '3120.00',
+            pagar_proximos30dias: '27650.90',
         }),
     },
 ]

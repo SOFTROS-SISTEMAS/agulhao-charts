@@ -9,6 +9,7 @@ import {
     IndicadoresOrcamentosAprovadosFaturadosEntregues,
     IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
 } from './indicadoresOrcamentosAprovadosFaturadosEntregues'
+import { IndicadoresReceberPagar, IndicadoresReceberPagarLayout } from './indicadoresReceberPagar'
 
 export const dashboardWidgets: Map<
     string,
@@ -57,6 +58,13 @@ export const dashboardWidgets: Map<
         {
             componente: IndicadoresOrcamentosAprovadosFaturadosEntregues,
             layout: IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
+        },
+    ],
+    [
+        'indicadoresReceberPagar',
+        {
+            componente: IndicadoresReceberPagar,
+            layout: IndicadoresReceberPagarLayout,
         },
     ],
 ])
