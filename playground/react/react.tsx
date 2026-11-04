@@ -1,7 +1,8 @@
 import { createRoot } from 'react-dom/client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AgulhaoChart, AgulhaoDashboard } from '../../packages/react/src/index.js'
 import type { DefinicaoGrafico } from '../../packages/core/src/index.js'
+import { AgulhaoDashboardWidget } from '../../packages/react/src/dashboard/types.js'
 
 // import { Dashboard } from '../packages/react/src/Dashboard.js'
 // Habilite a linha acima (e adicione uma opcao abaixo) quando o Dashboard estiver implementado.
@@ -70,7 +71,14 @@ const graficos: Record<string, DefinicaoGrafico> = {
 }
 
 function App() {
+    const [widgetsState, setWidgetsState] = useState<AgulhaoDashboardWidget[]>([])
     const [tipo, setTipo] = useState<Grafico>('dashboard')
+
+    useEffect(() => {
+        setTimeout(() => {
+            setWidgetsState(widgets)
+        }, 500)
+    }, [])
 
     return (
         <div className="pagina">
@@ -93,7 +101,7 @@ function App() {
             </header>
             {tipo === 'dashboard' ? (
                 <div className="dashboard">
-                    <AgulhaoDashboard widgets={widgets} />
+                    <AgulhaoDashboard widgets={widgetsState} />
                 </div>
             ) : (
                 <section className="preview">

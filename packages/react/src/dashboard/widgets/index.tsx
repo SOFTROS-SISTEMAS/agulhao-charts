@@ -14,56 +14,56 @@ import { IndicadoresReceberPagar, IndicadoresReceberPagarLayout } from './indica
 export const dashboardWidgets: Map<
     string,
     {
-        componente: (p: AgulhaoDashboardWidget) => React.JSX.Element
+        Componente: (p: AgulhaoDashboardWidget) => React.JSX.Element
         layout: LayoutItem
     }
 > = new Map([
     [
         'acompanhamentoPedidos',
         {
-            componente: AcompanhamentoPedidos,
+            Componente: AcompanhamentoPedidos,
             layout: AcompanhamentoPedidosLayout,
         },
     ],
     [
         'graficoVendasUltimos12meses',
         {
-            componente: GraficoVendasUltimos12Meses,
+            Componente: GraficoVendasUltimos12Meses,
             layout: GraficoVendasUltimos12MesesLayout,
         },
     ],
     [
         'graficoReceitasMesPlanoContas',
         {
-            componente: GraficoReceitasMesPlanoContas,
+            Componente: GraficoReceitasMesPlanoContas,
             layout: GraficoReceitasMesPlanoContasLayout,
         },
     ],
     [
         'graficoVendasMesTipoLancamento',
         {
-            componente: GraficoVendasMesTipoLancamento,
+            Componente: GraficoVendasMesTipoLancamento,
             layout: GraficoVendasMesTipoLancamentoLayout,
         },
     ],
     [
         'graficoDespesasMesGrupoPlanoContas',
         {
-            componente: GraficoDespesasMesGrupoPlanoContas,
+            Componente: GraficoDespesasMesGrupoPlanoContas,
             layout: GraficoDespesasMesGrupoPlanoContasLayout,
         },
     ],
     [
         'indicadoresOrcamentosAprovadosFaturadosEntregues',
         {
-            componente: IndicadoresOrcamentosAprovadosFaturadosEntregues,
+            Componente: IndicadoresOrcamentosAprovadosFaturadosEntregues,
             layout: IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
         },
     ],
     [
         'indicadoresReceberPagar',
         {
-            componente: IndicadoresReceberPagar,
+            Componente: IndicadoresReceberPagar,
             layout: IndicadoresReceberPagarLayout,
         },
     ],

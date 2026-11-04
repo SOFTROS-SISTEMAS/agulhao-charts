@@ -16,8 +16,6 @@ export function GraficoVendasUltimos12Meses(w: AgulhaoDashboardWidget) {
 
     const [carregando, setCarregando] = useState(false)
     const [dados, setDados] = useState<Dados>(zodStringToJson(w.conteudo || '[]', schema).data || [])
-    const [grafico, setGrafico] = useState<DefinicaoGrafico | null>(null)
-    const [{ totalAtual, totalAnterior, variacao }, setTotais] = useState({ totalAtual: 0, totalAnterior: 0, variacao: null as number | null })
     const intervalo = useRef<number | null>(null)
 
     useEffect(() => {
@@ -34,46 +32,6 @@ export function GraficoVendasUltimos12Meses(w: AgulhaoDashboardWidget) {
         }
     }, [])
 
-    useEffect(() => {
-        setTimeout(() => {
-            const meses = [...dados].sort((a, b) => a.anoAtual * 100 + a.mes - (b.anoAtual * 100 + b.mes))
-
-            const totalAtual = meses.reduce((soma, m) => soma + m.valorAtual, 0)
-            const totalAnterior = meses.reduce((soma, m) => soma + m.valorAnterior, 0)
-            const variacao = totalAnterior ? ((totalAtual - totalAnterior) / totalAnterior) * 100 : null
-
-            setTotais({ totalAtual, totalAnterior, variacao })
-            setGrafico({
-                tipo: 'barra',
-                dataset: {
-                    colunas: [
-                        { nome: 'atual', tipo: 'numero', rotulo: 'Ano atual' },
-                        { nome: 'anterior', tipo: 'numero', rotulo: 'Ano anterior' },
-                    ],
-                    linhas: meses.map((m) => ({
-                        mesAno: `${nomesMes[m.mes - 1]}/${String(m.anoAtual).slice(-2)}`,
-                        atual: m.valorAtual,
-                        anterior: m.valorAnterior,
-                    })),
-                },
-                mapeamento: { eixoX: 'mesAno', eixoY: ['atual', 'anterior'] },
-                opcoes: {
-                    mostrarLegenda: true,
-                    formatadorValor: (valor) => milhares(valor, 'R$'),
-                    eixoValor: {
-                        tamanhoFonte: 16,
-                    },
-                    serie: {
-                        cor: [
-                            { nome: 'Ano atual', cor: '#235DD9' },
-                            { nome: 'Ano anterior', cor: '#B9C2D0' },
-                        ],
-                    },
-                },
-            })
-        }, 0)
-    }, [dados])
-
     const atualizar = async () => {
         setCarregando(true)
         const resultado = await atualizaWidget(w.widgetId, w.id)
@@ -85,10 +43,46 @@ export function GraficoVendasUltimos12Meses(w: AgulhaoDashboardWidget) {
         }
     }
 
+    const meses = [...dados].sort((a, b) => a.anoAtual * 100 + a.mes - (b.anoAtual * 100 + b.mes))
+
+    const totalAtual = meses.reduce((soma, m) => soma + m.valorAtual, 0)
+    const totalAnterior = meses.reduce((soma, m) => soma + m.valorAnterior, 0)
+    const variacao = totalAnterior ? ((totalAtual - totalAnterior) / totalAnterior) * 100 : null
+
     return (
         <Estrutura id={w.id} titulo={w.titulo} descricao={w.descricao} ultimaSincronizacao={w.ultimaSincronizacao} carregando={carregando}>
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {grafico && <AgulhaoChart style={{ flexGrow: 1 }} grafico={grafico} />}
+                <AgulhaoChart
+                    style={{ flexGrow: 1 }}
+                    grafico={{
+                        tipo: 'barra',
+                        dataset: {
+                            colunas: [
+                                { nome: 'atual', tipo: 'numero', rotulo: 'Ano atual' },
+                                { nome: 'anterior', tipo: 'numero', rotulo: 'Ano anterior' },
+                            ],
+                            linhas: meses.map((m) => ({
+                                mesAno: `${nomesMes[m.mes - 1]}/${String(m.anoAtual).slice(-2)}`,
+                                atual: m.valorAtual,
+                                anterior: m.valorAnterior,
+                            })),
+                        },
+                        mapeamento: { eixoX: 'mesAno', eixoY: ['atual', 'anterior'] },
+                        opcoes: {
+                            mostrarLegenda: true,
+                            formatadorValor: (valor) => milhares(valor, 'R$'),
+                            eixoValor: {
+                                tamanhoFonte: 16,
+                            },
+                            serie: {
+                                cor: [
+                                    { nome: 'Ano atual', cor: '#235DD9' },
+                                    { nome: 'Ano anterior', cor: '#B9C2D0' },
+                                ],
+                            },
+                        },
+                    }}
+                />
 
                 <div
                     style={{

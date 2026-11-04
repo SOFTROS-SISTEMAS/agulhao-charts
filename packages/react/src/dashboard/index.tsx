@@ -12,7 +12,7 @@ interface AgulhaoDashboardProps {
 }
 
 export function AgulhaoDashboard({ widgets }: AgulhaoDashboardProps) {
-    const { width, containerRef } = useContainerWidth()
+    const { width, containerRef } = useContainerWidth({ debounceTimeout: 100 })
 
     return (
         <DashboardContext.Provider
@@ -46,7 +46,7 @@ export function AgulhaoDashboard({ widgets }: AgulhaoDashboardProps) {
 
                         return (
                             <div key={w.id} data-grid={{ ...c.layout, ...w.layout, id: w.id }}>
-                                {c.componente(w)}
+                                <c.Componente {...w} />
                             </div>
                         )
                     })}
