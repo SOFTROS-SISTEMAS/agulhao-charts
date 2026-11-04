@@ -49,9 +49,7 @@ export function GraficoReceitasMesPlanoContas(w: AgulhaoDashboardWidget) {
     for (const d of doMesVigente) {
         porPlanoContas.set(d.planoContas, (porPlanoContas.get(d.planoContas) || 0) + d.valor)
     }
-    const linhas = [...porPlanoContas.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .map(([planoContas, valor]) => ({ planoContas, valor }))
+    const linhas = [...porPlanoContas.entries()].sort((a, b) => b[1] - a[1]).map(([planoContas, valor]) => ({ planoContas, valor }))
 
     const total = linhas.reduce((soma, l) => soma + l.valor, 0)
 
@@ -65,9 +63,15 @@ export function GraficoReceitasMesPlanoContas(w: AgulhaoDashboardWidget) {
                         dataset: { linhas },
                         mapeamento: { rotulo: 'planoContas', valor: 'valor' },
                         opcoes: {
-                            moeda: 'BRL',
+                            pizza: {
+                                raio: '50%',
+                            },
+                            legenda: {
+                                orientacao: 'horizontal',
+                            },
+                            formatadorValor: (v) => milhares(v, 'R$'),
                             rotulo: {
-                                formato: '{b}\n {c} ({d}%)',
+                                formato: (p) => `${p.name}\n ${milhares(p.value, 'R$')} (${milhares(p.percent)}%)`,
                                 tamanhoFonte: 18,
                                 alturaLinha: 20,
                                 espacamento: 10,

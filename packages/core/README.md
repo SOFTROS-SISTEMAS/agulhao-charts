@@ -786,12 +786,20 @@ opcoes: {
 Campos:
 
 - `mostrar`: exibe ou esconde o label. Quando `opcoes.rotulo` é informado, o padrão é `true`.
-- `formato`: string no formato de template do ECharts (ex.: `'{b}: {c} ({d}%)'`). Os placeholders variam por tipo de gráfico — em pizza, `{b}` é o nome, `{c}` o valor e `{d}` o percentual; em gauge, use `{value}`.
+- `formato`: string no formato de template do ECharts (ex.: `'{b}: {c} ({d}%)'`) ou uma função `(parametros) => string`. Os placeholders/campos variam por tipo de gráfico — em pizza, `{b}`/`name` é o nome, `{c}`/`value` o valor e `{d}`/`percent` o percentual; em gauge, use `{value}` (a função recebe só `value`, sem `name`/`percent`). Use a função quando precisar aplicar casas decimais, separador de milhar ou prefixo de moeda ao valor exibido no label — o template do ECharts não formata números:
+
+    ```ts
+    opcoes: {
+        rotulo: {
+            formato: (p) => `${p.name}: ${p.value.toLocaleString('pt-BR')} (${p.percent}%)`,
+        },
+    }
+    ```
 - `tamanhoFonte`, `alturaLinha`, `espacamento`: equivalentes a `fontSize`, `lineHeight` e `padding` do ECharts.
 - `posicao`: posição do label (`'top'` por padrão em gráficos com eixo).
 - `linha.comprimento`, `linha.comprimento2`, `linha.suave`: equivalentes a `labelLine.length`, `labelLine.length2` e `labelLine.smooth`. Só têm efeito em `pizza`.
 
-Em `gauge`, `rotulo.formato` e `rotulo.tamanhoFonte` controlam o `detail` (o valor central exibido no marcador).
+Em `gauge`, `rotulo.formato` e `rotulo.tamanhoFonte` controlam o `detail` (o valor central exibido no marcador). Quando `formato` é função, ela recebe só `{ name: '', value }` — o gauge do ECharts não expõe nome/percentual nesse formatter.
 
 ### opcoes.formatadorValor
 

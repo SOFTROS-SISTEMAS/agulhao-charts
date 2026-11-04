@@ -44,9 +44,7 @@ export function GraficoVendasMesTipoLancamento(w: AgulhaoDashboardWidget) {
     for (const d of dados) {
         porLancamento.set(d.lancamento, (porLancamento.get(d.lancamento) || 0) + d.valor)
     }
-    const linhas = [...porLancamento.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .map(([lancamento, valor]) => ({ lancamento, valor }))
+    const linhas = [...porLancamento.entries()].sort((a, b) => b[1] - a[1]).map(([lancamento, valor]) => ({ lancamento, valor }))
 
     const total = linhas.reduce((soma, l) => soma + l.valor, 0)
 
@@ -60,9 +58,15 @@ export function GraficoVendasMesTipoLancamento(w: AgulhaoDashboardWidget) {
                         dataset: { linhas },
                         mapeamento: { rotulo: 'lancamento', valor: 'valor' },
                         opcoes: {
-                            moeda: 'BRL',
+                            pizza: {
+                                raio: '50%',
+                            },
+                            legenda: {
+                                orientacao: 'horizontal',
+                            },
+                            formatadorValor: (v) => milhares(v, 'R$'),
                             rotulo: {
-                                formato: '{b}\n {c} ({d}%)',
+                                formato: (p) => `${p.name}\n ${milhares(p.value, 'R$')} (${milhares(p.percent)}%)`,
                                 tamanhoFonte: 18,
                                 alturaLinha: 20,
                                 espacamento: 10,

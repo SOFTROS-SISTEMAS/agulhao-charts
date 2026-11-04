@@ -2,7 +2,7 @@ import type { EChartsOption } from 'echarts/types/dist/echarts'
 import { obterRotuloDoCampo, obterValoresUnicos, validarCampoExistente } from './utils/dataset.js'
 import { converterParaNumero, normalizarValor, obterMaximo, obterMinimo, somarValores, transformarEmListaDeCampos } from './utils/normalizacoes.js'
 import { obterCorDaSerie } from './utils/series.js'
-import type { DefinicaoGrafico, OpcoesGrafico, TipoGrafico } from './types.js'
+import type { DefinicaoGrafico, OpcoesGrafico, ParametrosFormatadorRotulo, TipoGrafico } from './types.js'
 
 /**
  * Traduz a definicao comum de grafico do Agulhao Charts para o objeto
@@ -59,9 +59,12 @@ function criarOpcaoComEixos(grafico: DefinicaoGrafico): EChartsOption {
         },
     }
 
+    const posicaoLegenda = opcoes?.legenda?.posicao
+    const legendaNaBase = opcoes?.mostrarLegenda !== false && (posicaoLegenda === undefined || posicaoLegenda === 'rodape')
+
     return aplicarOpcoesComuns(grafico, {
         grid: {
-            bottom: grafico.opcoes?.mostrarLegenda === false ? undefined : 64,
+            bottom: legendaNaBase ? 64 : undefined,
             containLabel: true,
         },
         xAxis: horizontal ? eixoValor : eixoCategoria,
@@ -153,11 +156,11 @@ function criarOpcaoGauge(grafico: DefinicaoGrafico): EChartsOption {
                       }
                     : undefined,
                 detail: opcoes?.rotulo
-                    ? {
+                    ? omitirIndefinidos({
                           show: opcoes.rotulo.mostrar ?? true,
-                          formatter: opcoes.rotulo.formato,
+                          formatter: criarFormatadorDeValorUnico(opcoes.rotulo.formato),
                           fontSize: opcoes.rotulo.tamanhoFonte,
-                      }
+                      })
                     : undefined,
                 data: dataset.linhas.map((linha) => ({
                     name: campoRotulo ? normalizarValor(linha[campoRotulo]) : (opcoes?.serie?.nome ?? grafico.titulo),
@@ -220,6 +223,33 @@ function criarOpcaoMapa(grafico: DefinicaoGrafico): EChartsOption {
 }
 
 /**
+ * Adapta `RotuloGrafico.formato` para o formato de `formatter` esperado pelo
+ * `detail` do gauge do ECharts, que recebe so o valor numerico (sem nome ou
+ * percentual) em vez do objeto de parametros usado pelos demais tipos.
+ */
+function criarFormatadorDeValorUnico(formato: string | ((parametros: ParametrosFormatadorRotulo) => string) | undefined): string | ((valor: number) => string) | undefined {
+    if (typeof formato !== 'function') {
+        return formato
+    }
+
+    return (valor: number) => formato({ name: '', value: valor })
+}
+
+/**
+ * Remove chaves com valor `undefined` de um objeto.
+ *
+ * O ECharts faz merge das opcoes do usuario por cima do seu `defaultOption`
+ * interno (ex.: `label.position: 'outer'` na pizza) copiando qualquer chave
+ * presente no objeto, mesmo com valor `undefined` — o que sobrescreve o
+ * default com `undefined` em vez de preservar o comportamento padrao. Por
+ * isso os builders de `label`/`labelLine` nao podem simplesmente retornar um
+ * objeto literal com campos opcionais ausentes como `undefined`.
+ */
+function omitirIndefinidos<T extends Record<string, unknown>>(objeto: T): T {
+    return Object.fromEntries(Object.entries(objeto).filter(([, valor]) => valor !== undefined)) as T
+}
+
+/**
  * Monta o objeto `label` do ECharts a partir de `opcoes.rotulo`.
  *
  * `opcoes.rotulo` e generico e reaproveitado por pizza, eixo e mapa. Quando
@@ -233,14 +263,14 @@ function criarRotulo(opcoes: OpcoesGrafico | undefined, posicaoPadrao?: string):
         return undefined
     }
 
-    return {
+    return omitirIndefinidos({
         show: rotulo.mostrar ?? true,
         formatter: rotulo.formato,
         fontSize: rotulo.tamanhoFonte,
         lineHeight: rotulo.alturaLinha,
         padding: rotulo.espacamento,
         position: rotulo.posicao ?? posicaoPadrao,
-    }
+    })
 }
 
 /**
@@ -255,10 +285,38 @@ function criarLinhaRotulo(opcoes: OpcoesGrafico | undefined): Record<string, unk
         return undefined
     }
 
-    return {
+    return omitirIndefinidos({
         length: linha.comprimento,
         length2: linha.comprimento2,
         smooth: linha.suave,
+    })
+}
+
+/**
+ * Resolve `opcoes.legenda.posicao` para as propriedades de posicionamento
+ * (`top`/`bottom`/`left`/`right`) e o `orient` padrao do `legend` do
+ * ECharts. Retorna objeto vazio quando `posicao` nao e informado, deixando
+ * o default de cada tipo de grafico (resolvido em `aplicarOpcoesComuns`)
+ * valer.
+ */
+function criarPosicaoLegenda(posicao: NonNullable<OpcoesGrafico['legenda']>['posicao']): {
+    top?: string | number
+    bottom?: string | number
+    left?: string | number
+    right?: string | number
+    orientacaoPadrao?: 'horizontal' | 'vertical'
+} {
+    switch (posicao) {
+        case 'topo':
+            return { top: 0, left: 'center', orientacaoPadrao: 'horizontal' }
+        case 'rodape':
+            return { bottom: 0, left: 'center', orientacaoPadrao: 'horizontal' }
+        case 'esquerda':
+            return { left: 0, top: 'center', orientacaoPadrao: 'vertical' }
+        case 'direita':
+            return { right: 0, top: 'center', orientacaoPadrao: 'vertical' }
+        default:
+            return {}
     }
 }
 
@@ -271,6 +329,10 @@ function criarLinhaRotulo(opcoes: OpcoesGrafico | undefined): Record<string, unk
  * ainda pode sobrescrever propriedades se precisar.
  */
 function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): EChartsOption {
+    const legenda = grafico.opcoes?.legenda
+    const posicaoLegenda = criarPosicaoLegenda(legenda?.posicao)
+    const ehGraficoSemEixo = grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa'
+
     return {
         title: grafico.titulo
             ? {
@@ -283,7 +345,7 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
             grafico.opcoes?.mostrarTooltip === false
                 ? undefined
                 : {
-                      trigger: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? 'item' : 'axis',
+                      trigger: ehGraficoSemEixo ? 'item' : 'axis',
                       valueFormatter: grafico.opcoes?.formatadorValor
                           ? (valor: unknown) => grafico.opcoes!.formatadorValor!(Number(valor))
                           : undefined,
@@ -291,11 +353,13 @@ function aplicarOpcoesComuns(grafico: DefinicaoGrafico, option: EChartsOption): 
         legend:
             grafico.opcoes?.mostrarLegenda === false
                 ? undefined
-                : {
-                      orient: grafico.opcoes?.legenda?.orientacao,
-                      left: grafico.opcoes?.legenda?.esquerda,
-                      bottom: grafico.tipo === 'pizza' || grafico.tipo === 'gauge' || grafico.tipo === 'mapa' ? undefined : 0,
-                  },
+                : omitirIndefinidos({
+                      orient: legenda?.orientacao ?? posicaoLegenda.orientacaoPadrao,
+                      left: legenda?.esquerda ?? posicaoLegenda.left,
+                      top: posicaoLegenda.top,
+                      right: posicaoLegenda.right,
+                      bottom: posicaoLegenda.bottom ?? (ehGraficoSemEixo || legenda?.posicao ? undefined : 0),
+                  }),
         ...option,
     }
 }

@@ -135,6 +135,22 @@ export type CorSerieGrafico = {
 }
 
 /**
+ * Dados disponíveis para `RotuloGrafico.formato` quando informado como
+ * função, equivalentes aos parâmetros que o ECharts passa para um
+ * `formatter` de label/detail (ver `CallbackDataParams` do ECharts).
+ */
+export type ParametrosFormatadorRotulo = {
+    /** Nome do ponto/fatia/região (`{b}` no template do ECharts). */
+    name: string
+    /** Valor numérico do ponto/fatia/região (`{c}` no template do ECharts). */
+    value: number
+    /** Percentual sobre o total, disponível apenas em `pizza` (`{d}` no template do ECharts). */
+    percent?: number
+    /** Nome da série (`{a}` no template do ECharts). */
+    seriesName?: string
+}
+
+/**
  * Configuração genérica do label exibido sobre cada ponto/fatia/barra/
  * região, reaproveitada por `pizza`, gráficos com eixo, `gauge` (vira o
  * `detail`, o valor central) e `mapa`. Ver `criarRotulo`/`criarLinhaRotulo`.
@@ -143,13 +159,15 @@ export type RotuloGrafico = {
     /** Exibe ou esconde o label. Default `true` quando `opcoes.rotulo` é informado. */
     mostrar?: boolean
     /**
-     * Template de formatação do ECharts (ex.: `'{b}: {c} ({d}%)'`). Os
-     * placeholders variam por tipo de gráfico: em pizza, `{b}` é o nome,
-     * `{c}` o valor e `{d}` o percentual; em gauge, use `{value}`. Para
-     * formatar o valor numérico em si (casas decimais, milhar, prefixo de
-     * moeda) de forma reaproveitável, prefira `opcoes.formatadorValor`.
+     * Template de formatação do ECharts (ex.: `'{b}: {c} ({d}%)'`) ou uma
+     * função que recebe os dados do ponto/fatia/região e retorna o texto já
+     * formatado — use a função quando precisar aplicar casas decimais,
+     * separador de milhar ou prefixo de moeda ao valor exibido no label (o
+     * template do ECharts não formata números). Os placeholders de template
+     * variam por tipo de gráfico: em pizza, `{b}` é o nome, `{c}` o valor e
+     * `{d}` o percentual; em gauge, use `{value}`.
      */
-    formato?: string
+    formato?: string | ((parametros: ParametrosFormatadorRotulo) => string)
     /** Tamanho da fonte do label, em px (`fontSize` do ECharts). */
     tamanhoFonte?: number
     /** Altura da linha do label (`lineHeight` do ECharts), para labels com quebra de linha. */
@@ -232,10 +250,25 @@ export type OpcoesGrafico = {
     }
     /** Opções da legenda. Só têm efeito quando `mostrarLegenda` não é `false`. */
     legenda?: {
-        /** Orientação dos itens da legenda. */
+        /**
+         * Orientação dos itens da legenda. Quando `posicao` é informado, já
+         * tem um default sensato (`'horizontal'` em `'topo'`/`'rodape'`,
+         * `'vertical'` em `'esquerda'`/`'direita'`) — informe `orientacao`
+         * só para sobrescrever esse default.
+         */
         orientacao?: 'horizontal' | 'vertical'
-        /** Alinhamento horizontal da legenda (`legend.left` do ECharts). */
+        /**
+         * Alinhamento horizontal da legenda (`legend.left` do ECharts).
+         * Sobrescreve o alinhamento horizontal calculado a partir de
+         * `posicao`, quando os dois forem informados.
+         */
         esquerda?: string
+        /**
+         * Lado da área do gráfico onde a legenda é posicionada. Default: em
+         * gráficos com eixo (`barra`/`linha`/`area`), `'rodape'`; nos
+         * demais tipos, usa o posicionamento padrão do ECharts.
+         */
+        posicao?: 'topo' | 'rodape' | 'esquerda' | 'direita'
     }
     /** Opções gerais da(s) série(s) do gráfico. */
     serie?: {

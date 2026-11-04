@@ -56,9 +56,9 @@ export function AcompanhamentoPedidos(w: AgulhaoDashboardWidget) {
                         mapeamento: { rotulo: 'status', valor: 'quantidade', cor: 'cor' },
                         opcoes: {
                             serie: { nome: 'Status do pedido' },
-                            pizza: { raio: '70%' },
+                            pizza: { raio: '50%' },
                             rotulo: {
-                                formato: '{b}\n {c} ({d}%)',
+                                formato: (p) => `${p.name}\n ${inteiro(p.value)} (${milhares(p.percent)}%)`,
                                 tamanhoFonte: 18,
                                 alturaLinha: 20,
                                 espacamento: 10,

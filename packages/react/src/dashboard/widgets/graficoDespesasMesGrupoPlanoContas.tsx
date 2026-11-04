@@ -49,9 +49,7 @@ export function GraficoDespesasMesGrupoPlanoContas(w: AgulhaoDashboardWidget) {
     for (const d of doMesVigente) {
         porGrupo.set(d.grupoPlanoContas, (porGrupo.get(d.grupoPlanoContas) || 0) + d.valor)
     }
-    const linhas = [...porGrupo.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .map(([grupoPlanoContas, valor]) => ({ grupoPlanoContas, valor }))
+    const linhas = [...porGrupo.entries()].sort((a, b) => b[1] - a[1]).map(([grupoPlanoContas, valor]) => ({ grupoPlanoContas, valor }))
 
     const total = linhas.reduce((soma, l) => soma + l.valor, 0)
 
@@ -65,9 +63,15 @@ export function GraficoDespesasMesGrupoPlanoContas(w: AgulhaoDashboardWidget) {
                         dataset: { linhas },
                         mapeamento: { rotulo: 'grupoPlanoContas', valor: 'valor' },
                         opcoes: {
-                            moeda: 'BRL',
+                            pizza: {
+                                raio: '50%',
+                            },
+                            legenda: {
+                                orientacao: 'horizontal',
+                            },
+                            formatadorValor: (v) => milhares(v, 'R$'),
                             rotulo: {
-                                formato: '{b}\n {c} ({d}%)',
+                                formato: (p) => `${p.name}\n ${milhares(p.value, 'R$')} (${milhares(p.percent)}%)`,
                                 tamanhoFonte: 18,
                                 alturaLinha: 20,
                                 espacamento: 10,
