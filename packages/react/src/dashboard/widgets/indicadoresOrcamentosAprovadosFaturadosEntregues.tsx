@@ -106,9 +106,11 @@ export const IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout: LayoutItem 
     i: 'indicadoresOrcamentosAprovadosFaturadosEntregues',
     x: 0,
     y: 0,
-    w: 4,
+    w: 6,
     h: 2,
-    isResizable: false,
+    minW: 4,
+    minH: 2,
+    isResizable: true,
     isDraggable: true,
 }
 

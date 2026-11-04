@@ -145,7 +145,13 @@ export function IndicadoresReceberPagar(w: AgulhaoDashboardWidget) {
                                                 {s.alerta && (
                                                     <span
                                                         className={emAlerta ? 'ag-dashboard-pulso' : undefined}
-                                                        style={{ width: '6px', height: '6px', minWidth: '6px', borderRadius: '50%', background: '#DC2626' }}
+                                                        style={{
+                                                            width: '6px',
+                                                            height: '6px',
+                                                            minWidth: '6px',
+                                                            borderRadius: '50%',
+                                                            background: '#DC2626',
+                                                        }}
                                                     />
                                                 )}
                                                 {s.rotulo}
@@ -175,11 +181,11 @@ export const IndicadoresReceberPagarLayout: LayoutItem = {
     i: 'indicadoresReceberPagar',
     x: 0,
     y: 0,
-    w: 4,
+    w: 6,
     h: 2,
-    minW: 3,
-    minH: 3,
-    isResizable: false,
+    minW: 4,
+    minH: 2,
+    isResizable: true,
     isDraggable: true,
 }
 

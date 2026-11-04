@@ -10,6 +10,7 @@ import {
     IndicadoresOrcamentosAprovadosFaturadosEntreguesLayout,
 } from './indicadoresOrcamentosAprovadosFaturadosEntregues'
 import { IndicadoresReceberPagar, IndicadoresReceberPagarLayout } from './indicadoresReceberPagar'
+import { IndicadoresSaldoContas, IndicadoresSaldoContasLayout } from './indicadoresSaldoContas'
 
 export const dashboardWidgets: Map<
     string,
@@ -65,6 +66,13 @@ export const dashboardWidgets: Map<
         {
             Componente: IndicadoresReceberPagar,
             layout: IndicadoresReceberPagarLayout,
+        },
+    ],
+    [
+        'indicadoresSaldoContas',
+        {
+            Componente: IndicadoresSaldoContas,
+            layout: IndicadoresSaldoContasLayout,
         },
     ],
 ])

@@ -216,6 +216,20 @@ const widgets = [
             pagar_proximos30dias: '27650.90',
         }),
     },
+    {
+        id: '160',
+        titulo: 'Saldo das Contas',
+        descricao: 'Visualização do saldo atual de cada conta.',
+        widgetId: 'indicadoresSaldoContas',
+        conteudo: JSON.stringify({
+            lista: [
+                { id: '1', conta: 'Banco do Brasil - CC', saldo: 14832000.75, bancoCod: '001' },
+                { id: '2', conta: 'Itaú - CC', saldo: 12980.4, bancoCod: '341' },
+                { id: '3', conta: 'Caixa - Poupança', saldo: 5230.0, bancoCod: '104' },
+                { id: '4', conta: 'Cartão Corporativo', saldo: -3870.9 },
+            ],
+        }),
+    },
 ]
 
 createRoot(document.getElementById('app')!).render(<App />)
