@@ -101,7 +101,7 @@ function App() {
             </header>
             {tipo === 'dashboard' ? (
                 <div className="dashboard">
-                    <AgulhaoDashboard widgets={widgetsState} />
+                    <AgulhaoDashboard widgets={widgetsState} alterouLayout={console.log} />
                 </div>
             ) : (
                 <section className="preview">
