@@ -114,6 +114,29 @@ function App() {
 
 const widgets = [
     {
+        id: '148',
+        widgetId: 'calendario',
+        titulo: 'Calendário',
+        descricao: 'Calendário do sistema Agulhão',
+        atualizaEmSegundos: 60,
+        conteudo: JSON.stringify({
+            eventos: [
+                { data: '2026-11-05', tipo: 'aniversariantes', titulo: 'Aniversário de Maria' },
+                { data: '2026-11-05', tipo: 'lembretes', titulo: 'Reunião com fornecedor' },
+                { data: '2026-11-10', tipo: 'contasPagar', acao: 'https://example.com/contas-a-pagar' },
+                { data: '2026-11-18', tipo: 'contasReceber' },
+                { data: '2026-11-18', tipo: 'aniversariantes', titulo: 'Aniversário de João' },
+                { data: '2026-11-25', tipo: 'evento-especial', titulo: 'Black Friday' },
+            ],
+        }),
+        layout: {
+            h: 3,
+            w: 4,
+            x: 0,
+            y: 0,
+        },
+    },
+    {
         id: '149',
         titulo: 'Acompanhamento dos pedidos',
         descricao: 'Gráfico que apresenta a distrubuição dos pedidos conforme o status',
@@ -220,15 +243,13 @@ const widgets = [
         id: '160',
         titulo: 'Saldo das Contas',
         descricao: 'Visualização do saldo atual de cada conta.',
-        widgetId: 'indicadoresSaldoContas',
-        conteudo: JSON.stringify({
-            lista: [
-                { id: '1', conta: 'Banco do Brasil - CC', saldo: 14832000.75, bancoCod: '001' },
-                { id: '2', conta: 'Itaú - CC', saldo: 12980.4, bancoCod: '341' },
-                { id: '3', conta: 'Caixa - Poupança', saldo: 5230.0, bancoCod: '104' },
-                { id: '4', conta: 'Cartão Corporativo', saldo: -3870.9 },
-            ],
-        }),
+        widgetId: 'graficoSaldoContas',
+        conteudo: JSON.stringify([
+            { id: '1', conta: 'Banco do Brasil - CC', saldo: 14832000.75, bancoCod: '001' },
+            { id: '2', conta: 'Itaú - CC', saldo: 12980.4, bancoCod: '341' },
+            { id: '3', conta: 'Caixa - Poupança', saldo: 5230.0, bancoCod: '104' },
+            { id: '4', conta: 'Cartão Corporativo', saldo: -3870.9 },
+        ]),
     },
 ]
 

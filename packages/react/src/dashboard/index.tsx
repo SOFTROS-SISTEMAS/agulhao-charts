@@ -15,6 +15,7 @@ interface AgulhaoDashboardProps {
     id?: string
     widgets: AgulhaoDashboardWidget[]
     alterouLayout?: (layout: LayoutItem[]) => void
+    solicitouAtualizacao?: (widgetId: string, id: string) => Promise<string | null>
     ref?: ForwardedRef<AgulhaoDashboardRef>
 }
 
@@ -29,7 +30,13 @@ export interface AgulhaoDashboardRef {
     retornarElementos: () => ElementoRenderizado[]
 }
 
-export function AgulhaoDashboard({ id = 'agulhao-dashboard', widgets, alterouLayout, ref }: AgulhaoDashboardProps) {
+export function AgulhaoDashboard({
+    id = 'agulhao-dashboard',
+    widgets,
+    alterouLayout,
+    ref,
+    solicitouAtualizacao = () => Promise.resolve(null),
+}: AgulhaoDashboardProps) {
     const { width, containerRef } = useContainerWidth({ debounceTimeout: 100 })
     const posicoesAtualizadas = useRef<LayoutItem[]>([])
 
@@ -66,10 +73,7 @@ export function AgulhaoDashboard({ id = 'agulhao-dashboard', widgets, alterouLay
     return (
         <DashboardContext.Provider
             value={{
-                atualizaWidget: (widgetId: string, id: string) => {
-                    console.log('atualizaWidget', widgetId, id)
-                    return Promise.resolve(null)
-                },
+                atualizaWidget: solicitouAtualizacao,
             }}>
             <div id={id} style={{ flex: 1, height: '100%', overflowY: 'auto' }}>
                 <Responsive
@@ -82,7 +86,16 @@ export function AgulhaoDashboard({ id = 'agulhao-dashboard', widgets, alterouLay
                         if (!c) return null
 
                         return (
-                            <div key={w.id} data-grid={{ ...c.layout, ...w.layout, id: w.id }}>
+                            <div
+                                key={w.id}
+                                data-grid={{
+                                    ...c.layout,
+                                    id: w.id,
+                                    h: w.layout?.h ?? c.layout.h,
+                                    w: w.layout?.w ?? c.layout.w,
+                                    x: w.layout?.x ?? c.layout.x,
+                                    y: w.layout?.y ?? c.layout.y,
+                                }}>
                                 <c.Componente {...w} />
                             </div>
                         )

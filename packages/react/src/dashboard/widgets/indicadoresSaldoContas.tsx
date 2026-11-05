@@ -46,7 +46,7 @@ export function IndicadoresSaldoContas(w: AgulhaoDashboardWidget) {
         }
     }
 
-    const lista = dados?.lista || []
+    const lista = dados || []
     const total = lista.reduce((soma, conta) => soma + conta.saldo, 0)
     const corTotal = total < 0 ? paletas.vermelho : paletas.verde
 
@@ -163,17 +163,15 @@ export const IndicadoresSaldoContasLayout: LayoutItem = {
     isDraggable: true,
 }
 
-const schema = z.object({
-    lista: z
-        .array(
-            z.object({
-                id: z.string(),
-                conta: z.string(),
-                saldo: z.coerce.number(),
-                bancoCod: z.string().nullish(),
-            }),
-        )
-        .optional(),
-})
+const schema = z
+    .array(
+        z.object({
+            id: z.string(),
+            conta: z.string(),
+            saldo: z.coerce.number(),
+            bancoCod: z.string().nullish(),
+        }),
+    )
+    .optional()
 
 type Dados = z.infer<typeof schema>

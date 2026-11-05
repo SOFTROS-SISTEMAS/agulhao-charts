@@ -11,6 +11,7 @@ import {
 } from './indicadoresOrcamentosAprovadosFaturadosEntregues'
 import { IndicadoresReceberPagar, IndicadoresReceberPagarLayout } from './indicadoresReceberPagar'
 import { IndicadoresSaldoContas, IndicadoresSaldoContasLayout } from './indicadoresSaldoContas'
+import { Calendario, CalendarioLayout } from './calendario'
 
 export const dashboardWidgets: Map<
     string,
@@ -69,10 +70,17 @@ export const dashboardWidgets: Map<
         },
     ],
     [
-        'indicadoresSaldoContas',
+        'graficoSaldoContas',
         {
             Componente: IndicadoresSaldoContas,
             layout: IndicadoresSaldoContasLayout,
+        },
+    ],
+    [
+        'calendario',
+        {
+            Componente: Calendario,
+            layout: CalendarioLayout,
         },
     ],
 ])
