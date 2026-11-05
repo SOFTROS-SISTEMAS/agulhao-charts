@@ -108,9 +108,9 @@ export function Calendario(w: AgulhaoDashboardWidget) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '0.7rem 0.9rem',
+                        padding: '0.4rem',
                     }}>
-                    <span style={{ fontWeight: 700, fontSize: '1.05rem', color: '#1a1a1a' }}>
+                    <span style={{ fontWeight: 700, fontSize: '1rem', color: '#1a1a1a' }}>
                         {meses[mes]} {ano}
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -133,7 +133,7 @@ export function Calendario(w: AgulhaoDashboardWidget) {
                                 <th
                                     key={diaSemana}
                                     style={{
-                                        color: '#9a9a9a',
+                                        color: '#1a1a1a',
                                         fontWeight: 600,
                                         fontSize: '0.75rem',
                                         letterSpacing: '0.04em',
