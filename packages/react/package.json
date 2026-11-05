@@ -1,6 +1,6 @@
 {
     "name": "@softros/agulhao-charts-react",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "description": "Componente React para renderizar graficos a partir da definicao comum do Agulhao Charts.",
     "homepage": "https://github.com/SOFTROS-SISTEMAS/agulhao-charts",
     "license": "Apache-2.0",

@@ -4,9 +4,6 @@ import { AgulhaoChart, AgulhaoDashboard } from '../../packages/react/src/index.j
 import type { DefinicaoGrafico } from '../../packages/core/src/index.js'
 import { AgulhaoDashboardWidget } from '../../packages/react/src/dashboard/types.js'
 
-// import { Dashboard } from '../packages/react/src/Dashboard.js'
-// Habilite a linha acima (e adicione uma opcao abaixo) quando o Dashboard estiver implementado.
-
 type Grafico = 'barra' | 'pizza' | 'mapa' | 'ranking' | 'dashboard'
 const opcoes: Record<Grafico, string> = {
     barra: 'Gráfico de barras',
@@ -122,16 +119,23 @@ const widgets = [
         conteudo: JSON.stringify({
             eventos: [
                 { data: '2026-11-05', tipo: 'aniversariantes', titulo: 'Aniversário de Maria' },
+                { data: '2026-11-05', tipo: 'aniversariantes', titulo: 'Aniversário do Luis' },
                 { data: '2026-11-05', tipo: 'lembretes', titulo: 'Reunião com fornecedor' },
+                { data: '2026-11-05', tipo: 'evento-especial', titulo: 'Teste' },
                 { data: '2026-11-10', tipo: 'contasPagar', acao: 'https://example.com/contas-a-pagar' },
                 { data: '2026-11-18', tipo: 'contasReceber' },
                 { data: '2026-11-18', tipo: 'aniversariantes', titulo: 'Aniversário de João' },
                 { data: '2026-11-25', tipo: 'evento-especial', titulo: 'Black Friday' },
             ],
+            links: {
+                aniversariantes: 'https://example.com/aniversariantes',
+                contasPagar: 'https://example.com/contas-a-pagar',
+                contasReceber: 'https://example.com/contas-a-receber',
+            },
         }),
         layout: {
             h: 3,
-            w: 4,
+            w: 12,
             x: 0,
             y: 0,
         },
