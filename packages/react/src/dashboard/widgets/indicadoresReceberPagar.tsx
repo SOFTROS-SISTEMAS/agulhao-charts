@@ -74,8 +74,10 @@ export function IndicadoresReceberPagar(w: AgulhaoDashboardWidget) {
         <Estrutura id={w.id} titulo={w.titulo} descricao={w.descricao} ultimaSincronizacao={w.ultimaSincronizacao} carregando={carregando}>
             <div style={{ display: 'flex', gap: '12px', padding: '1rem', height: '100%' }}>
                 {grupos.map((grupo) => {
-                    const total = grupo.campoTotal.reduce((soma, c) => soma + (dados?.[c] || 0), 0)
-                    const hoje = dados?.[grupo.hoje.campo] || 0
+                    const [campos] = dados || []
+
+                    const total = grupo.campoTotal.reduce((soma, c) => soma + (campos?.[c] || 0), 0)
+                    const hoje = campos?.[grupo.hoje.campo] || 0
 
                     return (
                         <div
@@ -127,7 +129,7 @@ export function IndicadoresReceberPagar(w: AgulhaoDashboardWidget) {
 
                             <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
                                 {grupo.secundarios.map((s) => {
-                                    const valor = dados?.[s.campo] || 0
+                                    const valor = campos?.[s.campo] || 0
                                     const emAlerta = s.alerta && valor > 0
 
                                     return (
@@ -189,13 +191,17 @@ export const IndicadoresReceberPagarLayout: LayoutItem = {
     isDraggable: true,
 }
 
-const schema = z.object({
-    receber_vencidas: z.coerce.number(),
-    receber_Hoje: z.coerce.number(),
-    receber_aVencer: z.coerce.number(),
-    pagar_vencidas: z.coerce.number(),
-    pagar_Hoje: z.coerce.number(),
-    pagar_proximos30dias: z.coerce.number(),
-})
+const schema = z
+    .array(
+        z.object({
+            receber_vencidas: z.coerce.number(),
+            receber_Hoje: z.coerce.number(),
+            receber_aVencer: z.coerce.number(),
+            pagar_vencidas: z.coerce.number(),
+            pagar_Hoje: z.coerce.number(),
+            pagar_proximos30dias: z.coerce.number(),
+        }),
+    )
+    .optional()
 
 type Dados = z.infer<typeof schema>
